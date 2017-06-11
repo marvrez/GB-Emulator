@@ -46,4 +46,45 @@ public:
     const u32 cycles;
 };
 
+
+//BIT-FUNCTIONS
+
+namespace BitOperations {
+
+static inline u8 composeBits(const u8 high, const u8 low) {
+    return static_cast<u8>(high << 1 | low);
+}
+
+static inline u8 composeNibbles(const u8 high, const u8 low) {
+    return static_cast<u8>(high << 4 | low);
+}
+
+static inline u16 composeBytes(const u8 high, const u8 low) {
+    return static_cast<u16>((high << 8) | low);
+}
+
+static inline bool checkBit(const u8 value, const u8 bit) {
+    return (value & (1 << bit)) != 0;
+}
+
+static inline u8 bitValue(const u8 value, const u8 bit) {
+    return (value >> bit) & 1;
+}
+
+static inline u8 setBit(const u8 value, const u8 bit) {
+    u8 value_set = value | (1 << bit);
+    return value_set;
+}
+
+static inline u8 clearBit(const u8 value, const u8 bit) {
+        auto value_cleared = value & ~(1 << bit);
+            return static_cast<u8>(value_cleared);
+}
+
+static inline u8 setBitTo(const u8 value, const u8 bit, bool bit_on) {
+    return bit_on ? set_bit(value, bit)
+                  : clear_bit(value, bit);
+}
+} //namespace BitOperations
+
 #endif
