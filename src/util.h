@@ -33,10 +33,10 @@ enum class Color {
 };
 
 struct BGPalette {
-    Color White = Color::White,
-          LightGray = Color::LightGray,
-          DarkGray = Color::DarkGray,
-          Black = Color::Black;
+    Color color0 = Color::White,
+          color1 = Color::LightGray,
+          color2 = Color::DarkGray,
+          color3 = Color::Black;
 };
 
 class Cycles {
