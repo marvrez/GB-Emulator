@@ -56,10 +56,10 @@ public:
 
     virtual void set(u16 newVal) = 0;
 
-    virtual u16 getValue() const;
+    virtual u16 getValue() const = 0;
 
-    virtual u8 low() const;
-    virtual u8 high() const;
+    virtual u8 low() const = 0;
+    virtual u8 high() const = 0;
 };
 
 class WordRegister : public IWordValue {
@@ -104,6 +104,5 @@ private:
     ByteRegister& lowByte;
     ByteRegister& highByte;
 };
-
 
 #endif 

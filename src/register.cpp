@@ -32,6 +32,7 @@ bool ByteRegister::operator==(const u8 other) const {
     return val == other;
 }
 
+
 void FlagRegister::set(const u8 newVal) {
     val = newVal & 0xF0;
 }
@@ -57,7 +58,7 @@ bool FlagRegister::checkFlagZero() const {
 }
 
 bool FlagRegister::checkFlagSubtract() const {
-    return chekBit(6);
+    return checkBit(6);
 }
 
 bool FlagRegister::checkFlagHalfCarry() const {
@@ -82,4 +83,65 @@ u8 FlagRegister::getFlagHalfCarry() const {
 
 u8 FlagRegister::getFlagCarry() const {
     return static_cast<u8>(checkFlagCarry() ? 1 : 0);
+}
+
+
+void WordRegister::set(const u16 newVal) {
+    val = newVal;
+}
+
+u16 WordRegister::getValue() const {
+    return val;
+}
+
+u8 WordRegister::low() const {
+    //discard upper byte
+    return static_cast<u8>(val);
+}
+
+u8 WordRegister::high() const {
+    //Discard lower byte
+    return static_cast<u8>((val) >> 8);
+}
+
+void WordRegister::increment() {
+    ++val;
+}
+void WordRegister::decrement() {
+    --val;
+}
+
+
+RegisterPair::RegisterPair(ByteRegister& high, ByteRegister& low) :
+    lowByte(low), highByte(high)
+{
+}
+
+void RegisterPair::set(const u16 newVal) {
+    //Discard the upper byte
+    lowByte.set(static_cast<u8>(newVal));
+
+    //Discard the lower byte
+    highByte.set(static_cast<u8>((newVal) >> 8));
+}
+
+u8 RegisterPair::low() const {
+    return lowByte.getValue();
+}
+
+u8 RegisterPair::high() const {
+    return highByte.getValue();
+}
+
+u16 RegisterPair::getValue() const {
+    return BitOperations::composeBytes(highByte.getValue(),
+                                        lowByte.getValue());
+}
+
+void RegisterPair::increment() {
+    this->set(this->getValue() + 1);
+}
+
+void RegisterPair::decrement() {
+    this->set(this->getValue() - 1);
 }

@@ -82,8 +82,8 @@ static inline u8 clearBit(const u8 value, const u8 bit) {
 }
 
 static inline u8 setBitTo(const u8 value, const u8 bit, bool bit_on) {
-    return bit_on ? set_bit(value, bit)
-                  : clear_bit(value, bit);
+    return bit_on ? setBit(value, bit)
+                  : clearBit(value, bit);
 }
 } //namespace BitOperations
 
