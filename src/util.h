@@ -19,10 +19,10 @@ static const int GAMEBOY_HEIGHT = 144;
 static const int CLOCK_RATE = 4194304;
 
 enum class GBColor {
-    White,
-    LightGray,
-    DarkGray,
-    Black,
+    Color0,
+    Color1,
+    Color2,
+    Color3,
 };
 
 enum class Color {
@@ -33,7 +33,7 @@ enum class Color {
 };
 
 struct BGPalette {
-    Color color0 = Color::White,
+    Color color0 = Color::White, //just default initializing some values..
           color1 = Color::LightGray,
           color2 = Color::DarkGray,
           color3 = Color::Black;
