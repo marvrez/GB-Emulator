@@ -87,7 +87,7 @@ u8 FlagRegister::getFlagCarry() const {
 
 
 WordRegister::WordRegister(ByteRegister& high, ByteRegister& low) {
-    val.raw = (high.getValue() << 8) + low.getValue();
+    val.raw = static_cast<u16>((high.getValue() << 8)) + low.getValue();
 }
 
 void WordRegister::set(const u16 newVal) {
@@ -110,5 +110,5 @@ void WordRegister::increment() {
     ++val.raw;
 }
 void WordRegister::decrement() {
-    --val.low;
+    --val.raw;
 }
