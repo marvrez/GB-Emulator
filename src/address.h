@@ -7,7 +7,6 @@
 class Address {
 public:
     Address(u16 location);
-    explicit Address(const RegisterPair& rp);
     explicit Address(const WordRegister& wr);
 
     u16 getValue() const;
@@ -19,7 +18,7 @@ public:
     Address operator-(u32 other) const;
 
 private:
-    u16 addr;
+    u16 address;
 };
 
 #endif

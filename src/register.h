@@ -29,8 +29,7 @@ protected:
 
 class FlagRegister : public ByteRegister {
 public:
-    /* Spacialized behaviour for flag register "F"
-    *      * (its lower nibble is always 0s */
+    //Spacialized behaviour for flag register "F", bits 0-3 are unused
     void set(u8 newVal) override;
 
     //bits 0-3 are unused
@@ -50,59 +49,32 @@ public:
     u8 getFlagCarry() const;
 };
 
-class IWordValue {
-public:
-    virtual ~IWordValue() = default;
-
-    virtual void set(u16 newVal) = 0;
-
-    virtual u16 getValue() const = 0;
-
-    virtual u8 low() const = 0;
-    virtual u8 high() const = 0;
-};
-
-class WordRegister : public IWordValue {
+class WordRegister {
 public:
     WordRegister() = default;
     WordRegister(const WordRegister& wr) = delete;
     WordRegister& operator=(const WordRegister& wr) = delete;
 
-    void set(u16 newVal) override;
+    WordRegister(ByteRegister& high, ByteRegister& low);
 
-    u16 getValue() const override;
+    void set(u16 newVal);
 
-    u8 low() const override;
-    u8 high() const override;
+    u16 getValue() const;
 
-    void increment();
-    void decrement();
-
-private:
-    u16 val;
-};
-
-class RegisterPair : public IWordValue { //HL, BC, CB, DE, etc..
-public:
-    RegisterPair() = default;
-    RegisterPair(const RegisterPair& rp) = delete;
-    RegisterPair& operator=(const RegisterPair& rp) = delete;
-
-    RegisterPair(ByteRegister& high, ByteRegister& low);
-
-    void set(u16 newVal) override;
-
-    u16 getValue() const override;
-
-    u8 low() const override;
-    u8 high() const override;
+    u8 getLowValue() const ;
+    u8 getHighValue() const;
 
     void increment();
     void decrement();
 
 private:
-    ByteRegister& lowByte;
-    ByteRegister& highByte;
+    union {
+        u16 raw;
+        struct { u8 low, high; };
+    } val;
 };
+
+using RegisterPair = WordRegister;
+
 
 #endif 

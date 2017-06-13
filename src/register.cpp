@@ -86,62 +86,29 @@ u8 FlagRegister::getFlagCarry() const {
 }
 
 
+WordRegister::WordRegister(ByteRegister& high, ByteRegister& low) {
+    val.raw = (high.getValue() << 8) + low.getValue();
+}
+
 void WordRegister::set(const u16 newVal) {
-    val = newVal;
+    val.raw = newVal;
 }
 
 u16 WordRegister::getValue() const {
-    return val;
+    return val.raw;
 }
 
-u8 WordRegister::low() const {
-    //discard upper byte
-    return static_cast<u8>(val);
+u8 WordRegister::getLowValue() const {
+    return val.low;
 }
 
-u8 WordRegister::high() const {
-    //Discard lower byte
-    return static_cast<u8>((val) >> 8);
+u8 WordRegister::getHighValue() const {
+    return val.high;
 }
 
 void WordRegister::increment() {
-    ++val;
+    ++val.raw;
 }
 void WordRegister::decrement() {
-    --val;
-}
-
-
-RegisterPair::RegisterPair(ByteRegister& high, ByteRegister& low) :
-    lowByte(low), highByte(high)
-{
-}
-
-void RegisterPair::set(const u16 newVal) {
-    //Discard the upper byte
-    lowByte.set(static_cast<u8>(newVal));
-
-    //Discard the lower byte
-    highByte.set(static_cast<u8>((newVal) >> 8));
-}
-
-u8 RegisterPair::low() const {
-    return lowByte.getValue();
-}
-
-u8 RegisterPair::high() const {
-    return highByte.getValue();
-}
-
-u16 RegisterPair::getValue() const {
-    return BitOperations::composeBytes(highByte.getValue(),
-                                        lowByte.getValue());
-}
-
-void RegisterPair::increment() {
-    this->set(this->getValue() + 1);
-}
-
-void RegisterPair::decrement() {
-    this->set(this->getValue() - 1);
+    --val.low;
 }
