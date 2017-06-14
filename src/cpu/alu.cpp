@@ -69,6 +69,49 @@ void ALU::sbc(const u8 value) {
 
     F->setFlagZero(result == 0);
     F->setFlagSubtract(1);
-    F->setFlagHalfCarry(((regValue & 0xf) - (value & 0xf) - carry) < 0);
+    F->setFlagHalfCarry(((regValue & 0x0F) - (value & 0x0F) - carry) < 0);
     F->setFlagCarry(fullResult < 0);
+}
+
+void ALU::_and(u8 value) {
+    A->setValue(A->getValue() & value);
+
+    F->setFlagZero(A->getValue() == 0);
+    F->setFlagHalfCarry(1);
+    F->setFlagCarry(0);
+    F->setFlagSubtract(0);
+}
+
+void ALU::_or(u8 value) {
+    A->setValue(A->getValue() | value);
+
+    F->setFlagZero(A->getValue() == 0);
+    F->setFlagHalfCarry(0);
+    F->setFlagCarry(0);
+    F->setFlagSubtract(0);
+}
+
+void ALU::_xor(u8 value) {
+    A->setValue(A->getValue() ^ value);
+
+    F->setFlagZero(A->getValue() == 0);
+    F->setFlagHalfCarry(0);
+    F->setFlagCarry(0);
+    F->setFlagSubtract(0);
+}
+
+void ALU::bit(const u8 bit, const u8 value) {
+    F->setFlagZero(!checkBit(value,bit));
+    F->setFlagHalfCarry(0);
+    F->setFlagSubtract(1);
+}
+
+void ALU::cp(const u8 value) {
+    u8 regValue = A->getValue();
+    u8 result = static_cast<u8> (regValue - value);
+
+    F->setFlagZero(result == 0);
+    F->setFlagHalfCarry(((regValue & 0x0F) - (value & 0x0F)) < 0);
+    F->setFlagCarry(regValue < value);
+    F->setFlagSubtract(1);
 }

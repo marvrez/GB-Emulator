@@ -13,7 +13,8 @@ public:
     void add_hl(u16 value);
     void sub(u8 value);
     void sbc(const u8 value);
-/*
+
+    //logic operations
     void _and(u8 value);
     void _or(u8 value);
     void _xor(u8 value);
@@ -21,6 +22,7 @@ public:
     void bit(const u8 bit, const u8 value);
     void cp(const u8 value);
 
+    /*
     //rotates
     u8 rl(u8 value);
     u8 rlc(u8 value);
