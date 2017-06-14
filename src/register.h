@@ -11,12 +11,12 @@ public:
 
   virtual ~ByteRegister() = default;
 
-  virtual void set(u8 newVal);
+  virtual void setValue(u8 newVal);
   void reset();
   u8 getValue() const;
 
   bool checkBit(u8 bit) const;
-  void setBitTo(u8 bit, bool set);
+  void setBitTo(u8 bit, bool setValue);
 
   void increment();
   void decrement();
@@ -24,19 +24,19 @@ public:
   bool operator==(const u8 other) const;
 
 protected:
-  u8 val;
+  u8 val = 0;
 };
 
 class FlagRegister : public ByteRegister {
 public:
     //Spacialized behaviour for flag register "F", bits 0-3 are unused
-    void set(u8 newVal) override;
+    void setValue(u8 newVal) override;
 
     //bits 0-3 are unused
-    void setFlagZero(bool set);
-    void setFlagSubtract(bool set);
-    void setFlagHalfCarry(bool set);
-    void setFlagCarry(bool set);
+    void setFlagZero(bool setValue);
+    void setFlagSubtract(bool setValue);
+    void setFlagHalfCarry(bool setValue);
+    void setFlagCarry(bool setValue);
 
     bool checkFlagZero() const;
     bool checkFlagSubtract() const;
@@ -49,32 +49,64 @@ public:
     u8 getFlagCarry() const;
 };
 
-class WordRegister {
+class IWordRegister {
 public:
-    WordRegister() = default;
-    WordRegister(const WordRegister& wr) = delete;
-    WordRegister& operator=(const WordRegister& wr) = delete;
+    IWordRegister() = default;
+    IWordRegister(const IWordRegister&) = delete;
+    IWordRegister& operator=(const IWordRegister&) = delete;
+    virtual ~IWordRegister() = default;
 
-    WordRegister(ByteRegister& high, ByteRegister& low);
+    virtual void setValue(u16 newVal) = 0;
 
-    void set(u16 newVal);
+    virtual u16 getValue() const = 0;
 
-    u16 getValue() const;
+    virtual u8 getLowValue() const = 0;
+    virtual u8 getHighValue() const = 0;
 
-    u8 getLowValue() const ;
-    u8 getHighValue() const;
-
-    void increment();
-    void decrement();
-
-private:
-    union {
-        u16 raw;
-        struct { u8 low, high; };
-    } val;
+    virtual void increment() = 0;
+    virtual void decrement() = 0;
 };
 
-using RegisterPair = WordRegister;
+class WordRegister : public IWordRegister {
+public:
+    void setValue(u16 newVal) override;
 
+    u16 getValue() const override;
 
-#endif 
+    u8 getLowValue() const override;
+    u8 getHighValue() const override;
+
+    void increment() override;
+    void decrement() override;
+
+private:
+    u16 val;
+};
+
+class RegisterPair : public IWordRegister { //HL, BC, CB, DE, etc..
+public:
+    RegisterPair() = default;
+    RegisterPair(const RegisterPair& rp) = delete;
+    RegisterPair& operator=(const RegisterPair& rp) = delete;
+
+    RegisterPair(ByteRegister* high, ByteRegister* low);
+
+    void setValue(u16 newVal) override;
+
+    u16 getValue() const override;
+
+    u8 getLowValue() const override;
+    u8 getHighValue() const override;
+
+    ByteRegister* getHighRegister() const;
+    ByteRegister* getLowRegister() const;
+
+    void increment() override;
+    void decrement() override;
+
+private:
+    ByteRegister* lowByte;
+    ByteRegister* highByte;
+};
+
+#endif

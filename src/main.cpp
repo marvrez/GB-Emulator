@@ -1,21 +1,37 @@
-#include <SFML/Window.hpp>
+#include <iostream>
+#include <cstdio>
 
-int main()
+#include "incl/color_utils.h"
+#include "register.h"
+#include "cpu/alu.h"
+
+int main(int argc, char** argv)
 {
-    sf::Window window(sf::VideoMode(800, 600), "My window");
-
-    // run the program as long as the window is open
-    while (window.isOpen())
-    {
-        // check all the window's events that were triggered since the last iteration of the loop
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            // "close requested" event: we close the window
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+    if(argc < 2) {
+        std::cout << BOLDRED << "[ERROR]: " << RESET;
+        std::cout << "Please provide a ROM file to run" << std::endl;
+        return 0;
     }
+
+    ByteRegister A, H, L;
+    FlagRegister F;
+    RegisterPair HL(&H, &L);
+
+    ALU alu(&A, &F, &HL);
+
+    alu.add(A.getValue(),0xFE);
+
+    printf("ZERO: %d HALF-CARRY: %d CARRY: %d SUBTRACT: %d\n", F.getFlagZero(), F.getFlagHalfCarry(), F.getFlagCarry(), F.getFlagSubtract());
+    printf("A-VALUE: 0x%X\n", A.getValue());
+
+    alu.sub(0xFF);
+    printf("ZERO: %d HALF-CARRY: %d CARRY: %d SUBTRACT: %d\n", F.getFlagZero(), F.getFlagHalfCarry(), F.getFlagCarry(), F.getFlagSubtract());
+    printf("A-VALUE: 0x%X\n", A.getValue());
+
+    alu.add(A.getValue(), 0x01);
+    printf("ZERO: %d HALF-CARRY: %d CARRY: %d SUBTRACT: %d\n", F.getFlagZero(), F.getFlagHalfCarry(), F.getFlagCarry(), F.getFlagSubtract());
+    printf("A-VALUE: 0x%X\n", A.getValue());
+
 
     return 0;
 }

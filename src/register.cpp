@@ -1,6 +1,6 @@
 #include "register.h"
 
-void ByteRegister::set(const u8 newVal) {
+void ByteRegister::setValue(const u8 newVal) {
     this->val = newVal;
 }
 
@@ -33,7 +33,7 @@ bool ByteRegister::operator==(const u8 other) const {
 }
 
 
-void FlagRegister::set(const u8 newVal) {
+void FlagRegister::setValue(const u8 newVal) {
     val = newVal & 0xF0;
 }
 
@@ -86,29 +86,65 @@ u8 FlagRegister::getFlagCarry() const {
 }
 
 
-WordRegister::WordRegister(ByteRegister& high, ByteRegister& low) {
-    val.raw = static_cast<u16>((high.getValue() << 8)) + low.getValue();
-}
-
-void WordRegister::set(const u16 newVal) {
-    val.raw = newVal;
+void WordRegister::setValue(const u16 newVal) {
+    val = newVal;
 }
 
 u16 WordRegister::getValue() const {
-    return val.raw;
+    return val;
 }
 
 u8 WordRegister::getLowValue() const {
-    return val.low;
+    return static_cast<u8>(val);
 }
 
 u8 WordRegister::getHighValue() const {
-    return val.high;
+    return static_cast<u8>((val) >> 8);
 }
 
 void WordRegister::increment() {
-    ++val.raw;
+    ++val;
 }
 void WordRegister::decrement() {
-    --val.raw;
+    --val;
+}
+
+
+RegisterPair::RegisterPair(ByteRegister* high, ByteRegister* low) :
+    lowByte(low), highByte(high)
+{
+}
+
+void RegisterPair::setValue(const u16 newVal) {
+    lowByte->setValue(static_cast<u8>(newVal));
+    highByte->setValue(static_cast<u8>((newVal) >> 8));
+}
+
+u8 RegisterPair::getLowValue() const {
+    return lowByte->getValue();
+}
+
+u8 RegisterPair::getHighValue() const {
+    return highByte->getValue();
+}
+
+ByteRegister* RegisterPair::getHighRegister() const {
+    return this->highByte;
+}
+
+ByteRegister* RegisterPair::getLowRegister() const {
+    return this->lowByte;
+}
+
+u16 RegisterPair::getValue() const {
+    return BitOperations::composeBytes(highByte->getValue(),
+                                        lowByte->getValue());
+}
+
+void RegisterPair::increment() {
+    this->setValue(this->getValue() + 1);
+}
+
+void RegisterPair::decrement() {
+    this->setValue(this->getValue() - 1);
 }
