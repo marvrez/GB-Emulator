@@ -5,6 +5,7 @@
 using BitOperations::checkBit;
 using BitOperations::clearBit;
 using BitOperations::setBit;
+using BitOperations::setBitTo;
 
 ALU::ALU(ByteRegister* A, FlagRegister* F)
     :A(A), F(F)
@@ -142,8 +143,41 @@ u8 ALU::rrc(u8 value) {
 
     F->setFlagCarry(checkBit(value,0));
     F->setFlagZero(result == 0);
-    F->setFlagSubtract(false);
-    F->setFlagHalfCarry(false);
+    F->setFlagSubtract(0);
+    F->setFlagHalfCarry(0);
+
+    return result;
+}
+
+u8 ALU::sla(u8 value) {
+    u8 result = static_cast<u8>(value << 1);
+
+    F->setFlagZero(result == 0);
+    F->setFlagCarry(checkBit(value, 7));
+    F->setFlagHalfCarry(0);
+    F->setFlagSubtract(0);
+
+    return result;
+}
+
+u8 ALU::sra(u8 value) {
+    u8 result = setBitTo(static_cast<u8>(value >> 1), 7, checkBit(value, 7)); //msb doesn't change
+
+    F->setFlagZero(result == 0);
+    F->setFlagCarry(checkBit(value,0));
+    F->setFlagHalfCarry(0);
+    F->setFlagSubtract(0);
+
+    return result;
+}
+
+u8 ALU::srl(u8 value) {
+    u8 result = (value >> 1);
+
+    F->setFlagCarry(checkBit(value,0));
+    F->setFlagZero(result == 0);
+    F->setFlagHalfCarry(0);
+    F->setFlagSubtract(0);
 
     return result;
 }

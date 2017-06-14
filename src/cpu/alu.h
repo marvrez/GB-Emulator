@@ -28,12 +28,12 @@ public:
     u8 rr(u8 value);
     u8 rrc(u8 value);
 
-    /*
     //shifterinos
-    void sla(u8 value);
-    void sra(u8 value);
-    void srl(u8 value);
+    u8 sla(u8 value);
+    u8 sra(u8 value);
+    u8 srl(u8 value);
 
+    /*
     //misc
     void swap(u8 value);
     void scf();
