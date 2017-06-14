@@ -6,8 +6,8 @@ using BitOperations::checkBit;
 using BitOperations::clearBit;
 using BitOperations::setBit;
 
-ALU::ALU(ByteRegister* A, FlagRegister* F, RegisterPair* HL)
-    :A(A), F(F), HL(HL)
+ALU::ALU(ByteRegister* A, FlagRegister* F)
+    :A(A), F(F)
 {
 }
 
@@ -33,17 +33,6 @@ void ALU::add(u8 val1, u8 val2) {
     F->setFlagSubtract(0);
     F->setFlagHalfCarry((val1 & 0x0F) + (val2 & 0x0F) > 0x0F);
     F->setFlagCarry((result & 0x100) != 0);
-}
-
-void ALU::add_hl(u16 value) {
-    u16 regValue = HL->getValue();
-    u32 result = regValue + value;
-
-    HL->setValue(static_cast<u16>(result));
-
-    F->setFlagSubtract(0);
-    F->setFlagHalfCarry((regValue & 0x0FFF) + (value & 0x0FFF) > 0x0FFF);
-    F->setFlagCarry((result & 0x10000) != 0);
 }
 
 void ALU::sub(u8 value) {
@@ -114,4 +103,47 @@ void ALU::cp(const u8 value) {
     F->setFlagHalfCarry(((regValue & 0x0F) - (value & 0x0F)) < 0);
     F->setFlagCarry(regValue < value);
     F->setFlagSubtract(1);
+}
+
+u8 ALU::rl(u8 value) {
+    u8 result = static_cast<u8>(value << 1) | F->getFlagCarry();
+
+    F->setFlagCarry(checkBit(value,7));
+    F->setFlagZero(result == 0);
+    F->setFlagSubtract(0);
+    F->setFlagHalfCarry(0);
+    return result;
+}
+
+u8 ALU::rlc(u8 value) {
+    u8 result = static_cast<u8>((value << 1) | checkBit(value,7));
+
+    F->setFlagCarry(checkBit(value,7));
+    F->setFlagZero(result == 0);
+    F->setFlagHalfCarry(0);
+    F->setFlagSubtract(0);
+
+    return result;
+}
+
+u8 ALU::rr(u8 value) {
+    u8 result = static_cast<u8>(value >> 1) | (F->getFlagCarry() << 7);
+
+    F->setFlagCarry(checkBit(value,0));
+    F->setFlagZero(result == 0);
+    F->setFlagSubtract(0);
+    F->setFlagHalfCarry(0);
+
+    return result;
+}
+
+u8 ALU::rrc(u8 value) {
+    u8 result = static_cast<u8>((value >> 1) | (checkBit(value,0) << 7));
+
+    F->setFlagCarry(checkBit(value,0));
+    F->setFlagZero(result == 0);
+    F->setFlagSubtract(false);
+    F->setFlagHalfCarry(false);
+
+    return result;
 }
