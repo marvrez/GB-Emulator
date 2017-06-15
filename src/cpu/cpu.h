@@ -26,7 +26,7 @@ const u16 JOYPAD = 0x60;
 
 class CPU {
 public:
-    CPU(MMU* mmu);
+    CPU(std::shared_ptr<MMU> mmu);
 
     Cycles tick();
 
@@ -37,6 +37,8 @@ public:
 
     ByteRegister interruptFlag;
     ByteRegister interruptEnabled;
+
+    bool isHalted() const;
 private:
     typedef void (CPU::*OPCptr) (void);
     OPCptr OPCodes[256];
@@ -45,6 +47,7 @@ private:
 
     bool interruptsEnabled = false;
     bool branchTaken = false;
+    bool halted = false;
 
     void handleInterrupts();
     bool handleInterrupt(u8 interruptBit, u16 interruptVector, u8 firedInterrupts);
@@ -59,7 +62,7 @@ private:
     void push(const IWordRegister& reg);
     void pop(IWordRegister& reg);
 
-    std::unique_ptr<ALU> alu;
+    ALU* alu;//std::unique_ptr<ALU> alu;
     std::shared_ptr<MMU> mmu;
 
     ByteRegister A, B, C, D, E, H, L;
@@ -83,12 +86,9 @@ private:
     void OPCode_ADD(const Address& addr);
 
     void OPCode_ADD_HL(u16 value);
-    void OPCode_ADD_HL(const RegisterPair& reg_pair);
-    void OPCode_ADD_HL(const WordRegister& word_reg);
+    void OPCode_ADD_HL(const IWordRegister& reg);
 
     void OPCode_ADD_SP();
-
-    void OPCode_ADD_SIGNED();
 
     /* AND */
     void OPCode_AND();
@@ -134,10 +134,12 @@ private:
     void OPCode_EI();
 
     /* INC */
+    void OPCode_INC(ByteRegister& reg);
     void OPCode_INC(IWordRegister& reg);
     void OPCode_INC(Address&& addr);
 
     /* DEC */
+    void OPCode_DEC(ByteRegister& reg);
     void OPCode_DEC(IWordRegister& reg);
     void OPCode_DEC(Address&& addr);
 
@@ -161,7 +163,7 @@ private:
     void OPCode_LD(RegisterPair& reg);
 
     void OPCode_LD(WordRegister& reg);
-    void OPCode_LD(WordRegister& reg, const RegisterPair& reg_pair);
+    void OPCode_LD(WordRegister& wordReg, const RegisterPair& regPair);
 
     void OPCode_LD(const Address& address);
     void OPCode_LD(const Address& address, const ByteRegister& byte_reg);
@@ -310,5 +312,7 @@ private:
     void OPCodeCB0xE0(); void OPCodeCB0xE1(); void OPCodeCB0xE2(); void OPCodeCB0xE3(); void OPCodeCB0xE4(); void OPCodeCB0xE5(); void OPCodeCB0xE6(); void OPCodeCB0xE7(); void OPCodeCB0xE8(); void OPCodeCB0xE9(); void OPCodeCB0xEA(); void OPCodeCB0xEB(); void OPCodeCB0xEC(); void OPCodeCB0xED(); void OPCodeCB0xEE(); void OPCodeCB0xEF();
     void OPCodeCB0xF0(); void OPCodeCB0xF1(); void OPCodeCB0xF2(); void OPCodeCB0xF3(); void OPCodeCB0xF4(); void OPCodeCB0xF5(); void OPCodeCB0xF6(); void OPCodeCB0xF7(); void OPCodeCB0xF8(); void OPCodeCB0xF9(); void OPCodeCB0xFA(); void OPCodeCB0xFB(); void OPCodeCB0xFC(); void OPCodeCB0xFD(); void OPCodeCB0xFE(); void OPCodeCB0xFF();
 };
+
+#include "cpu_inlines.h"
 
 #endif

@@ -2,8 +2,8 @@
 
 #include "opcode_cycles.h"
 
-CPU::CPU(MMU *mmu) :
-    mmu(mmu), AF(&A,&F), BC(&B,&C), DE(&D, &E), HL(&H,&L)
+CPU::CPU(std::shared_ptr<MMU> mmu) :
+    /*alu(std::make_unique<ALU>(&A,&F)),*/ mmu(mmu), AF(&A,&F), BC(&B,&C), DE(&D, &E), HL(&H,&L)
 {
     InitOPCodeFunctors();
 }
@@ -70,7 +70,6 @@ u16 CPU::getWordFromPC() {
     u8 low = getByteFromPC();
     u8 high = getByteFromPC();
     return BitOperations::composeBytes(high, low);
-
 }
 
 void CPU::push(const IWordRegister& reg) {
@@ -104,7 +103,12 @@ Cycles CPU::executeCBOPCode(u8 opcode, u16 OPCodePC) {
     return OPCodeCBMachineCycles[opcode];
 }
 
+bool CPU::isHalted() const {
+    return this->halted;
+}
+
 void CPU::InitOPCodeFunctors() {
+    /*
     OPCodes[0x00] = &CPU::OPCode0x00;
     OPCodes[0x01] = &CPU::OPCode0x01;
     OPCodes[0x02] = &CPU::OPCode0x02;
@@ -649,4 +653,5 @@ void CPU::InitOPCodeFunctors() {
     OPCodesCB[0xFD] = &CPU::OPCodeCB0xFD;
     OPCodesCB[0xFE] = &CPU::OPCodeCB0xFE;
     OPCodesCB[0xFF] = &CPU::OPCodeCB0xFF;
+    */
 }
