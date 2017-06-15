@@ -4,6 +4,9 @@ add_sources(
     main.cpp
     register.cpp
     address.cpp
-)
-#add_subdirectory(cpu)
+    mmu.cpp
 
+    util.h
+)
+add_subdirectory(cpu)
+add_subdirectory(incl)
