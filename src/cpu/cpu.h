@@ -6,6 +6,8 @@
 #include "../util.h"
 #include "../mmu.h"
 
+#include <memory>
+
 enum class Condition {
     NZ,
     Z,
@@ -13,13 +15,13 @@ enum class Condition {
     C,
 };
 
-enum class Interrupts {
-    VBLANK = 0x40,
-    LCDC_STATUS = 0x48,
-    TIMER = 0x50,
-    SERIAL = 0x58,
-    JOYPAD = 0x60,
-};
+namespace Interrupts {
+const u16 VBLANK = 0x40;
+const u16 LCDC_STATUS = 0x48;
+const u16 TIMER = 0x50;
+const u16 SERIAL = 0x58;
+const u16 JOYPAD = 0x60;
+} //namespace Interrupts;
 
 
 class CPU {
@@ -36,6 +38,11 @@ public:
     ByteRegister interruptFlag;
     ByteRegister interruptEnabled;
 private:
+    typedef void (CPU::*OPCptr) (void);
+    OPCptr OPCodes[256];
+    OPCptr OPCodesCB[256];
+    void InitOPCodeFunctors();
+
     bool interruptsEnabled = false;
     bool branchTaken = false;
 
@@ -52,19 +59,18 @@ private:
     void push(const IWordRegister& reg);
     void pop(IWordRegister& reg);
 
-    ALU* alu;
-    MMU* mmu;
+    std::unique_ptr<ALU> alu;
+    std::shared_ptr<MMU> mmu;
 
     ByteRegister A, B, C, D, E, H, L;
     FlagRegister F;
     RegisterPair AF, BC, DE, HL;
 
-    WordRegister pc; //program counter
-    WordRegister sp; //stack pointer
+    WordRegister PC; //program counter
+    WordRegister SP; //stack pointer
 
 private:
     //Opcode helper functions...
-    //TODO: RENAMING!!!
 
     /* ADC */
     void OPCode_ADC();
