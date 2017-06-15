@@ -6,6 +6,7 @@ using BitOperations::checkBit;
 using BitOperations::clearBit;
 using BitOperations::setBit;
 using BitOperations::setBitTo;
+using BitOperations::composeNibbles;
 
 ALU::ALU(ByteRegister* A, FlagRegister* F)
     :A(A), F(F)
@@ -117,7 +118,7 @@ u8 ALU::rl(u8 value) {
 }
 
 u8 ALU::rlc(u8 value) {
-    u8 result = static_cast<u8>((value << 1) | checkBit(value,7));
+    u8 result = static_cast<u8>(value << 1) | checkBit(value,7);
 
     F->setFlagCarry(checkBit(value,7));
     F->setFlagZero(result == 0);
@@ -174,10 +175,76 @@ u8 ALU::sra(u8 value) {
 u8 ALU::srl(u8 value) {
     u8 result = (value >> 1);
 
-    F->setFlagCarry(checkBit(value,0));
+    F->setFlagCarry(checkBit(value,0));//lsb
     F->setFlagZero(result == 0);
     F->setFlagHalfCarry(0);
     F->setFlagSubtract(0);
 
     return result;
+}
+
+u8 ALU::swap(u8 value) {
+    u8 result = composeNibbles(value & 0x0F, (value & 0xF0) >> 4);//compose lower and upper nibbles
+
+    F->setFlagZero(result == 0);
+    F->setFlagSubtract(0);
+    F->setFlagHalfCarry(0);
+    F->setFlagCarry(0);
+
+    return result;
+}
+
+void ALU::scf() {
+    F->setFlagCarry(1);
+    F->setFlagSubtract(0);
+    F->setFlagHalfCarry(0);
+}
+
+void ALU::ccf() {
+    F->setFlagCarry(!F->checkFlagCarry());
+    F->setFlagSubtract(0);
+    F->setFlagHalfCarry(0);
+}
+
+void ALU::cpl() {
+    A->setValue(~A->getValue());
+
+    F->setFlagSubtract(1);
+    F->setFlagHalfCarry(1);
+}
+
+void ALU::daa() {
+    u8 regValue = A->getValue();
+    u16 adjust = F->checkFlagCarry() ? 0x60 : 0x00;
+
+    if (F->checkFlagHalfCarry() || (!F->checkFlagSubtract() && ((regValue & 0x0F) > 0x09)))
+        adjust |= 0x06;
+
+    if (F->checkFlagCarry() || (!F->checkFlagSubtract() && (regValue > 0x99)))
+        adjust |= 0x60;
+
+    regValue = F->checkFlagSubtract() ? static_cast<u8>(regValue-adjust)
+                                      : static_cast<u8>(regValue+adjust);
+
+    F->setFlagCarry(adjust >= 0x60);
+    F->setFlagHalfCarry(0);
+    F->setFlagZero(regValue == 0);
+
+    A->setValue(static_cast<u8>(regValue));
+}
+
+void ALU::inc(ByteRegister& reg) {
+    reg.increment();
+
+    F->setFlagZero(reg.getValue() == 0);
+    F->setFlagSubtract(0);
+    F->setFlagHalfCarry((reg.getValue() & 0x0F) == 0x00);
+}
+
+void ALU::dec(ByteRegister& reg) {
+    reg.decrement();
+
+    F->setFlagZero(reg.getValue() == 0);
+    F->setFlagSubtract(1);
+    F->setFlagHalfCarry((reg.getValue() & 0x0F) == 0x0F);
 }

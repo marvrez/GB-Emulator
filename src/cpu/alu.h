@@ -33,9 +33,8 @@ public:
     u8 sra(u8 value);
     u8 srl(u8 value);
 
-    /*
     //misc
-    void swap(u8 value);
+    u8 swap(u8 value);
     void scf();
     void ccf();
     void cpl();
@@ -43,7 +42,6 @@ public:
 
     void inc(ByteRegister& reg);
     void dec(ByteRegister& reg);
-    */
 
 private:
     FlagRegister* F; //flag
