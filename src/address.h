@@ -8,6 +8,7 @@ class Address {
 public:
     Address(u16 location);
     explicit Address(const WordRegister& wr);
+    explicit Address(const RegisterPair& rp);
 
     u16 getValue() const;
 

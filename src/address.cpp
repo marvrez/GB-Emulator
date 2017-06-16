@@ -8,6 +8,10 @@ Address::Address(const WordRegister& wr) : address(wr.getValue())
 {
 }
 
+Address::Address(const RegisterPair& rp) : address(rp.getValue())
+{
+}
+
 u16 Address::getValue() const {
     return address;
 }
