@@ -10,6 +10,7 @@ CPU::CPU(std::shared_ptr<MMU> mmu) :
 
 Cycles CPU::tick() {
     handleInterrupts();
+    if(halted) return OPCodeMachineCycles[0x00];
     return executeOPCode(getByteFromPC(), PC.getValue()); //getopcode from PC and execute..
 }
 
@@ -20,6 +21,7 @@ Cycles CPU::executeOPCode(u8 opcode, u16 OPCodePC) {
 }
 
 void CPU::handleInterrupts() {
+    /*
     if (interruptsEnabled) {
         u8 firedInterrupts = interruptFlag.getValue() & interruptEnabled.getValue();
 
@@ -44,16 +46,47 @@ void CPU::handleInterrupts() {
         handledInterrupt = handleInterrupt(4, Interrupts::JOYPAD, firedInterrupts);
         if (handledInterrupt) return;
     }
+    */
+    using BitOperations::checkBit;
+
+    if (interruptsEnabled == false && halted == false)
+        return;
+    u8 firedInterrupts = interruptFlag.getValue() & interruptEnabled.getValue();
+    if(!firedInterrupts) return;
+    for (unsigned interruptBit = 0; interruptBit < 5; ++interruptBit) {
+        if (checkBit(firedInterrupts, interruptBit)) {
+            halted = false;
+            if (interruptsEnabled) {
+                interruptsEnabled = false;
+                interruptFlag.setBitTo(interruptBit, 0);
+                OPCode_RST(0x0040 | (interruptBit << 3));
+                return;
+            }
+            return;
+        }
+    }
 }
 
-bool CPU::handleInterrupt(u8 interruptBit, u16 interruptVector, u8 firedInterrupts) {
-    if (!BitOperations::checkBit(firedInterrupts, interruptBit))
-        return false;
+bool CPU::isCondition(Condition condition) {
+    bool shouldBranch;
 
-    interruptFlag.setBitTo(interruptBit, 0);
-    PC.setValue(interruptVector);
-    interruptsEnabled = false;
-    return true;
+    switch (condition) {
+        case Condition::NZ:
+            shouldBranch = !F.checkFlagZero();
+            break;
+        case Condition::Z:
+            shouldBranch = F.checkFlagZero();
+            break;
+        case Condition::NC:
+            shouldBranch = !F.checkFlagCarry();
+            break;
+        case Condition::C:
+            shouldBranch = F.checkFlagCarry();
+            break;
+    }
+
+    //remember branch so correct cycles are to be used
+    return branchTaken = shouldBranch;
 }
 
 u8 CPU::getByteFromPC() { //fetch opcode

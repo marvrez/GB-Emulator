@@ -35,8 +35,8 @@ public:
     Cycles executeNormalOPCode(u8 opcode, u16 OPCodePC);
     Cycles executeCBOPCode(u8 opcode, u16 OPCodePC);
 
-    ByteRegister interruptFlag;
-    ByteRegister interruptEnabled;
+    ByteRegister interruptFlag; //address: $0xFF0F
+    ByteRegister interruptEnabled; //address $0xFFFF
 
     bool isHalted() const;
 private:
@@ -50,7 +50,6 @@ private:
     bool halted = false;
 
     void handleInterrupts();
-    bool handleInterrupt(u8 interruptBit, u16 interruptVector, u8 firedInterrupts);
 
     bool isCondition(Condition condition);
 

@@ -223,7 +223,7 @@ inline void CPU::OPCode_JR(Condition condition) {
 
 /* HALT */
 inline void CPU::OPCode_HALT() {
-    //TODO
+    halted = true;
 }
 
 
@@ -423,7 +423,6 @@ inline void CPU::OPCode_RR(Address&& addr) {
     mmu->writeByte(addr, result);
 }
 
-
 /* RRC */
 inline void CPU::OPCode_RRC() {
     OPCode_RRC(A);
@@ -513,12 +512,10 @@ inline void CPU::OPCode_SRL(Address&& addr) {
     mmu->writeByte(addr, result);
 }
 
-
 /* STOP */
 inline void CPU::OPCode_STOP() {
     exit(1);
 }
-
 
 /* SUB */
 inline void CPU::OPCode_SUB() {
@@ -544,6 +541,5 @@ inline void CPU::OPCode_SWAP(Address&& addr) {
     u8 result = alu->swap(mmu->readByte(addr));
     mmu->writeByte(addr, result);
 }
-
 
 #endif
