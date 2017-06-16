@@ -159,9 +159,7 @@ private:
     void OPCode_LD(ByteRegister& reg, const ByteRegister& byte_reg);
     void OPCode_LD(ByteRegister& reg, const Address& address);
 
-    void OPCode_LD(RegisterPair& reg);
-
-    void OPCode_LD(WordRegister& reg);
+    void OPCode_LD(IWordRegister& reg);
     void OPCode_LD(WordRegister& wordReg, const RegisterPair& regPair);
 
     void OPCode_LD(const Address& address);
@@ -169,12 +167,10 @@ private:
     void OPCode_LD(const Address& address, const WordRegister& word_reg);
 
     // (nn), A
-    void OPCode_LD_FROM_ADDRESS(const ByteRegister& reg);
-    void OPCode_LD_TO_ADDRESS(ByteRegister& reg);
+    void OPCode_LD_FROM_ADDRESS(ByteRegister& reg);
+    void OPCode_LD_TO_ADDRESS(const ByteRegister& reg);
 
     /* LDD */
-    u8 OPCode_LDD(u8 value);
-
     void OPCode_LDD(ByteRegister& reg, const Address& address);
     void OPCode_LDD(const Address& address, const ByteRegister& reg);
 

@@ -21,7 +21,6 @@ inline void CPU::OPCode_ADC(const Address&& addr) {
     alu->adc(mmu->readByte(addr));
 }
 
-
 /* ADD */
 inline void CPU::OPCode_ADD() {
     alu->add(A.getValue(), getByteFromPC());
@@ -34,7 +33,6 @@ inline void CPU::OPCode_ADD(const ByteRegister& reg) {
 inline void CPU::OPCode_ADD(const Address& addr) {
     alu->add(A.getValue(), mmu->readByte(addr));
 }
-
 
 inline void CPU::OPCode_ADD_HL(u16 value) {
     u16 regValue = HL.getValue();
@@ -63,7 +61,6 @@ inline void CPU::OPCode_AND(ByteRegister& reg) {
 inline void CPU::OPCode_AND(Address&& addr) {
     alu->_and(mmu->readByte(addr));
 }
-
 
 /* OR */
 inline void CPU::OPCode_OR() {
@@ -135,18 +132,15 @@ inline void CPU::OPCode_CP(const Address& addr) {
     alu->cp(mmu->readByte(addr));
 }
 
-
 /* CPL */
 inline void CPU::OPCode_CPL() {
     alu->cpl();
 }
 
-
 /* DAA */
 inline void CPU::OPCode_DAA() {
     alu->daa();
 }
-
 
 /* DI */
 inline void CPU::OPCode_DI() {
@@ -158,7 +152,6 @@ inline void CPU::OPCode_DI() {
 inline void CPU::OPCode_EI() {
     interruptsEnabled = true;
 }
-
 
 /* INC */
 inline void CPU::OPCode_INC(ByteRegister& reg) {
@@ -199,25 +192,30 @@ inline void CPU::OPCode_DEC(Address&& addr) {
 
 /* JP */
 inline void CPU::OPCode_JP() {
-
+    PC.setValue(getWordFromPC());
 }
 
 inline void CPU::OPCode_JP(Condition condition) {
-
+    if (isCondition(condition)) OPCode_JP();
+    else getWordFromPC(); //"throw" unused word..
 }
 
 inline void CPU::OPCode_JP(const Address& addr) {
-
+    PC.setValue(HL.getValue());
 }
-
 
 /* JR */
 inline void CPU::OPCode_JR() {
+    s8 offset = getSignedByteFromPC();
+    u16 oldValue = PC.getValue();
 
+    u16 newValue = static_cast<u16>(oldValue + offset);
+    PC.setValue(newValue);
 }
 
 inline void CPU::OPCode_JR(Condition condition) {
-
+    if (isCondition(condition)) OPCode_JR();
+    else getSignedByteFromPC();
 }
 
 
@@ -229,105 +227,114 @@ inline void CPU::OPCode_HALT() {
 
 /* LD */
 inline void CPU::OPCode_LD(ByteRegister& reg) {
-
+    reg.setValue(getByteFromPC());
 }
 
-inline void CPU::OPCode_LD(ByteRegister& reg, const ByteRegister& byte_reg) {
-
+inline void CPU::OPCode_LD(ByteRegister& reg, const ByteRegister& reg2) {
+    reg.setValue(reg2.getValue());
 }
 
 inline void CPU::OPCode_LD(ByteRegister& reg, const Address& address) {
-
+    reg.setValue(mmu->readByte(address));
 }
 
 
-inline void CPU::OPCode_LD(RegisterPair& reg) {
-
-}
-
-
-inline void CPU::OPCode_LD(WordRegister& reg) {
-
+inline void CPU::OPCode_LD(IWordRegister& reg) {
+    reg.setValue(getWordFromPC());
 }
 
 inline void CPU::OPCode_LD(WordRegister& wordReg, const RegisterPair& regPair) {
-
+    wordReg.setValue(regPair.getValue());
 }
 
 
 inline void CPU::OPCode_LD(const Address& address) {
-
+    mmu->writeByte(address, getByteFromPC());
 }
 
-inline void CPU::OPCode_LD(const Address& address, const ByteRegister& byte_reg) {
-
+inline void CPU::OPCode_LD(const Address& address, const ByteRegister& byteReg) {
+    mmu->writeByte(address, byteReg.getValue());
 }
 
-inline void CPU::OPCode_LD(const Address& address, const WordRegister& reg) {
-
+inline void CPU::OPCode_LD(const Address& address, const WordRegister& wordReg) {
+    mmu->writeByte(address, wordReg.getLowValue());
+    mmu->writeByte(address + 1, wordReg.getHighValue());
 }
 
 
 // (nn), A
-inline void CPU::OPCode_LD_FROM_ADDRESS(const ByteRegister& reg) {
-
+inline void CPU::OPCode_LD_FROM_ADDRESS(ByteRegister& reg) {
+    reg.setValue(mmu->readByte(getWordFromPC()));
 }
 
-inline void CPU::OPCode_LD_TO_ADDRESS(ByteRegister& reg) {
-
+inline void CPU::OPCode_LD_TO_ADDRESS(const ByteRegister& reg) {
+    mmu->writeByte(Address(getWordFromPC()), reg.getValue());
 }
 
 
 /* LDD */
-u8 CPU::OPCode_LDD(u8 value) {
-
-}
-
-
 inline void CPU::OPCode_LDD(ByteRegister& reg, const Address& address) {
-
+    reg.setValue(mmu->readByte(address));
+    HL.decrement();
 }
 
 inline void CPU::OPCode_LDD(const Address& address, const ByteRegister& reg) {
-
+    mmu->writeByte(address,reg.getValue());
+    HL.decrement();
 }
 
 
 /* LDH */
 // A, (n)
 inline void CPU::OPCode_LDH_TO_A() {
-
+    u8 offset = getByteFromPC();
+    u8 value = mmu->readByte(Address(0xFF00 + offset));
+    A.setValue(value);
 }
 
 // (n), A
 inline void CPU::OPCode_LDH_TO_DATA() {
-
+    u8 offset = getByteFromPC();
+    mmu->writeByte(Address(0xFF00 + offset), A.getValue());
 }
 
 // (reg), A
 inline void CPU::OPCode_LDH_TO_C() {
-
+    u8 offset = C.getValue();
+    mmu->writeByte(Address(0xFF00 + offset), A.getValue());
 }
 
 // A, (reg)
 inline void CPU::OPCode_LDH_C_TO_A() {
-
+    A.setValue(mmu->readByte(Address(0xFF00 + C.getValue())));
 }
 
 
 /* LDHL */
 inline void CPU::OPCode_LDHL() {
+    u16 regValue = SP.getValue();
+    s8 pcValue = getSignedByteFromPC();
 
+    s32 result = static_cast<s32>(regValue + pcValue);
+
+    F.setFlagZero(0);
+    F.setFlagSubtract(0);
+    F.setFlagHalfCarry(((regValue ^ pcValue ^ (result & 0xFFFF)) & 0x0010) == 0x0010);
+    F.setFlagCarry(((regValue ^ pcValue ^ (result & 0xFFFF)) & 0x100) == 0x100);
+
+    HL.setValue(static_cast<u16>(result));
 }
 
 
 /* LDI */
 inline void CPU::OPCode_LDI(ByteRegister& reg, const Address& address) {
-
+    reg.setValue(mmu->readByte(address));
+    HL.increment();
 }
 
 inline void CPU::OPCode_LDI(const Address& address, const ByteRegister& reg) {
-
+    mmu->writeByte(address, reg.getValue());
+    HL.increment();
 }
 
 
