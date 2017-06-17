@@ -49,6 +49,18 @@ inline void CPU::OPCode_ADD_HL(const IWordRegister& reg) {
     OPCode_ADD_HL(reg.getValue());
 }
 
+inline void CPU::OPCode_ADD_SP() {
+    u16 spValue = SP.getValue();
+    s8 pcValue = getSignedByteFromPC();
+    s32 result = static_cast<u32>(spValue + pcValue);
+
+    F.setFlagZero(0);
+    F.setFlagSubtract(0);
+    F.setFlagHalfCarry(((spValue ^ pcValue ^ (result & 0xFFFF)) & 0x0010) == 0x0010);
+    F.setFlagCarry(((spValue ^ pcValue ^ (result & 0xFFFF)) & 0x0100) == 0x0100);
+
+    SP.setValue(static_cast<u16>(result));
+}
 /* AND */
 inline void CPU::OPCode_AND() {
     alu->_and(getByteFromPC());
@@ -111,7 +123,6 @@ inline void CPU::OPCode_CALL(Condition condition) {
     if (isCondition(condition)) OPCode_CALL();
     else getWordFromPC(); //use unused word
 }
-
 
 /* CCF */
 inline void CPU::OPCode_CCF() {
@@ -521,7 +532,7 @@ inline void CPU::OPCode_SRL(Address&& addr) {
 
 /* STOP */
 inline void CPU::OPCode_STOP() {
-    exit(1);
+    exit(1); //TODO: ehh... maybe do some real cleanup...
 }
 
 /* SUB */
@@ -536,7 +547,6 @@ inline void CPU::OPCode_SUB(ByteRegister& reg) {
 inline void CPU::OPCode_SUB(Address&& addr) {
     alu->sub(mmu->readByte(addr));
 }
-
 
 /* SWAP */
 inline void CPU::OPCode_SWAP(ByteRegister& reg) {

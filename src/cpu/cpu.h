@@ -15,15 +15,6 @@ enum class Condition {
     C,
 };
 
-namespace Interrupts {
-const u16 VBLANK = 0x40;
-const u16 LCDC_STATUS = 0x48;
-const u16 TIMER = 0x50;
-const u16 SERIAL = 0x58;
-const u16 JOYPAD = 0x60;
-} //namespace Interrupts;
-
-
 class CPU {
 public:
     CPU(std::shared_ptr<MMU> mmu);
