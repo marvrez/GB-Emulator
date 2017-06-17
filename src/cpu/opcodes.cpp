@@ -256,3 +256,262 @@ void CPU::OPCode0xFC() { /* Not used */ }
 void CPU::OPCode0xFD() { /* Not used */ }
 void CPU::OPCode0xFE() { OPCode_CP(); }
 void CPU::OPCode0xFF() { OPCode_RST(0x38); } //rst8
+
+
+//CB OPCodes
+void CPU::OPCodeCB0x00() { OPCode_RLC(B); }
+void CPU::OPCodeCB0x01() { OPCode_RLC(C); }
+void CPU::OPCodeCB0x02() { OPCode_RLC(D); }
+void CPU::OPCodeCB0x03() { OPCode_RLC(E); }
+void CPU::OPCodeCB0x04() { OPCode_RLC(H); }
+void CPU::OPCodeCB0x05() { OPCode_RLC(L); }
+void CPU::OPCodeCB0x06() { OPCode_RLC(Address(HL)); }
+void CPU::OPCodeCB0x07() { OPCode_RLC(A); }
+void CPU::OPCodeCB0x08() { OPCode_RRC(B); }
+void CPU::OPCodeCB0x09() { OPCode_RRC(C); }
+void CPU::OPCodeCB0x0A() { OPCode_RRC(D); }
+void CPU::OPCodeCB0x0B() { OPCode_RRC(E); }
+void CPU::OPCodeCB0x0C() { OPCode_RRC(H); }
+void CPU::OPCodeCB0x0D() { OPCode_RRC(L); }
+void CPU::OPCodeCB0x0E() { OPCode_RRC(Address(HL)); }
+void CPU::OPCodeCB0x0F() { OPCode_RRC(A); }
+void CPU::OPCodeCB0x10() { OPCode_RL(B); }
+void CPU::OPCodeCB0x11() { OPCode_RL(C); }
+void CPU::OPCodeCB0x12() { OPCode_RL(D); }
+void CPU::OPCodeCB0x13() { OPCode_RL(E); }
+void CPU::OPCodeCB0x14() { OPCode_RL(H); }
+void CPU::OPCodeCB0x15() { OPCode_RL(L); }
+void CPU::OPCodeCB0x16() { OPCode_RL(Address(HL)); }
+void CPU::OPCodeCB0x17() { OPCode_RL(A); }
+void CPU::OPCodeCB0x18() { OPCode_RR(B); }
+void CPU::OPCodeCB0x19() { OPCode_RR(C); }
+void CPU::OPCodeCB0x1A() { OPCode_RR(D); }
+void CPU::OPCodeCB0x1B() { OPCode_RR(E); }
+void CPU::OPCodeCB0x1C() { OPCode_RR(H); }
+void CPU::OPCodeCB0x1D() { OPCode_RR(L); }
+void CPU::OPCodeCB0x1E() { OPCode_RR(Address(HL)); }
+void CPU::OPCodeCB0x1F() { OPCode_RR(A); }
+void CPU::OPCodeCB0x20() { OPCode_SLA(B); }
+void CPU::OPCodeCB0x21() { OPCode_SLA(C); }
+void CPU::OPCodeCB0x22() { OPCode_SLA(D); }
+void CPU::OPCodeCB0x23() { OPCode_SLA(E); }
+void CPU::OPCodeCB0x24() { OPCode_SLA(H); }
+void CPU::OPCodeCB0x25() { OPCode_SLA(L); }
+void CPU::OPCodeCB0x26() { OPCode_SLA(Address(HL)); }
+void CPU::OPCodeCB0x27() { OPCode_SLA(A); }
+void CPU::OPCodeCB0x28() { OPCode_SRA(B); }
+void CPU::OPCodeCB0x29() { OPCode_SRA(C); }
+void CPU::OPCodeCB0x2A() { OPCode_SRA(D); }
+void CPU::OPCodeCB0x2B() { OPCode_SRA(E); }
+void CPU::OPCodeCB0x2C() { OPCode_SRA(H); }
+void CPU::OPCodeCB0x2D() { OPCode_SRA(L); }
+void CPU::OPCodeCB0x2E() { OPCode_SRA(Address(HL)); }
+void CPU::OPCodeCB0x2F() { OPCode_SRA(A); }
+void CPU::OPCodeCB0x30() { OPCode_SWAP(B); }
+void CPU::OPCodeCB0x31() { OPCode_SWAP(C); }
+void CPU::OPCodeCB0x32() { OPCode_SWAP(D); }
+void CPU::OPCodeCB0x33() { OPCode_SWAP(E); }
+void CPU::OPCodeCB0x34() { OPCode_SWAP(H); }
+void CPU::OPCodeCB0x35() { OPCode_SWAP(L); }
+void CPU::OPCodeCB0x36() { OPCode_SWAP(Address(HL)); }
+void CPU::OPCodeCB0x37() { OPCode_SWAP(A); }
+void CPU::OPCodeCB0x38() { OPCode_SRL(B); }
+void CPU::OPCodeCB0x39() { OPCode_SRL(C); }
+void CPU::OPCodeCB0x3A() { OPCode_SRL(D); }
+void CPU::OPCodeCB0x3B() { OPCode_SRL(E); }
+void CPU::OPCodeCB0x3C() { OPCode_SRL(H); }
+void CPU::OPCodeCB0x3D() { OPCode_SRL(L); }
+void CPU::OPCodeCB0x3E() { OPCode_SRL(Address(HL)); }
+void CPU::OPCodeCB0x3F() { OPCode_SRL(A); }
+void CPU::OPCodeCB0x40() { OPCode_BIT(0, B); }
+void CPU::OPCodeCB0x41() { OPCode_BIT(0, C); }
+void CPU::OPCodeCB0x42() { OPCode_BIT(0, D); }
+void CPU::OPCodeCB0x43() { OPCode_BIT(0, E); }
+void CPU::OPCodeCB0x44() { OPCode_BIT(0, H); }
+void CPU::OPCodeCB0x45() { OPCode_BIT(0, L); }
+void CPU::OPCodeCB0x46() { OPCode_BIT(0, Address(HL)); }
+void CPU::OPCodeCB0x47() { OPCode_BIT(0, A); }
+void CPU::OPCodeCB0x48() { OPCode_BIT(1, B); }
+void CPU::OPCodeCB0x49() { OPCode_BIT(1, C); }
+void CPU::OPCodeCB0x4A() { OPCode_BIT(1, D); }
+void CPU::OPCodeCB0x4B() { OPCode_BIT(1, E); }
+void CPU::OPCodeCB0x4C() { OPCode_BIT(1, H); }
+void CPU::OPCodeCB0x4D() { OPCode_BIT(1, L); }
+void CPU::OPCodeCB0x4E() { OPCode_BIT(1, Address(HL)); }
+void CPU::OPCodeCB0x4F() { OPCode_BIT(1, A); }
+void CPU::OPCodeCB0x50() { OPCode_BIT(2, B); }
+void CPU::OPCodeCB0x51() { OPCode_BIT(2, C); }
+void CPU::OPCodeCB0x52() { OPCode_BIT(2, D); }
+void CPU::OPCodeCB0x53() { OPCode_BIT(2, E); }
+void CPU::OPCodeCB0x54() { OPCode_BIT(2, H); }
+void CPU::OPCodeCB0x55() { OPCode_BIT(2, L); }
+void CPU::OPCodeCB0x56() { OPCode_BIT(2, Address(HL)); }
+void CPU::OPCodeCB0x57() { OPCode_BIT(2, A); }
+void CPU::OPCodeCB0x58() { OPCode_BIT(3, B); }
+void CPU::OPCodeCB0x59() { OPCode_BIT(3, C); }
+void CPU::OPCodeCB0x5A() { OPCode_BIT(3, D); }
+void CPU::OPCodeCB0x5B() { OPCode_BIT(3, E); }
+void CPU::OPCodeCB0x5C() { OPCode_BIT(3, H); }
+void CPU::OPCodeCB0x5D() { OPCode_BIT(3, L); }
+void CPU::OPCodeCB0x5E() { OPCode_BIT(3, Address(HL)); }
+void CPU::OPCodeCB0x5F() { OPCode_BIT(3, A); }
+void CPU::OPCodeCB0x60() { OPCode_BIT(4, B); }
+void CPU::OPCodeCB0x61() { OPCode_BIT(4, C); }
+void CPU::OPCodeCB0x62() { OPCode_BIT(4, D); }
+void CPU::OPCodeCB0x63() { OPCode_BIT(4, E); }
+void CPU::OPCodeCB0x64() { OPCode_BIT(4, H); }
+void CPU::OPCodeCB0x65() { OPCode_BIT(4, L); }
+void CPU::OPCodeCB0x66() { OPCode_BIT(4, Address(HL)); }
+void CPU::OPCodeCB0x67() { OPCode_BIT(4, A); }
+void CPU::OPCodeCB0x68() { OPCode_BIT(5, B); }
+void CPU::OPCodeCB0x69() { OPCode_BIT(5, C); }
+void CPU::OPCodeCB0x6A() { OPCode_BIT(5, D); }
+void CPU::OPCodeCB0x6B() { OPCode_BIT(5, E); }
+void CPU::OPCodeCB0x6C() { OPCode_BIT(5, H); }
+void CPU::OPCodeCB0x6D() { OPCode_BIT(5, L); }
+void CPU::OPCodeCB0x6E() { OPCode_BIT(5, Address(HL)); }
+void CPU::OPCodeCB0x6F() { OPCode_BIT(5, A); }
+void CPU::OPCodeCB0x70() { OPCode_BIT(6, B); }
+void CPU::OPCodeCB0x71() { OPCode_BIT(6, C); }
+void CPU::OPCodeCB0x72() { OPCode_BIT(6, D); }
+void CPU::OPCodeCB0x73() { OPCode_BIT(6, E); }
+void CPU::OPCodeCB0x74() { OPCode_BIT(6, H); }
+void CPU::OPCodeCB0x75() { OPCode_BIT(6, L); }
+void CPU::OPCodeCB0x76() { OPCode_BIT(6, Address(HL)); }
+void CPU::OPCodeCB0x77() { OPCode_BIT(6, A); }
+void CPU::OPCodeCB0x78() { OPCode_BIT(7, B); }
+void CPU::OPCodeCB0x79() { OPCode_BIT(7, C); }
+void CPU::OPCodeCB0x7A() { OPCode_BIT(7, D); }
+void CPU::OPCodeCB0x7B() { OPCode_BIT(7, E); }
+void CPU::OPCodeCB0x7C() { OPCode_BIT(7, H); }
+void CPU::OPCodeCB0x7D() { OPCode_BIT(7, L); }
+void CPU::OPCodeCB0x7E() { OPCode_BIT(7, Address(HL)); }
+void CPU::OPCodeCB0x7F() { OPCode_BIT(7, A); }
+void CPU::OPCodeCB0x80() { OPCode_RES(0, B); }
+void CPU::OPCodeCB0x81() { OPCode_RES(0, C); }
+void CPU::OPCodeCB0x82() { OPCode_RES(0, D); }
+void CPU::OPCodeCB0x83() { OPCode_RES(0, E); }
+void CPU::OPCodeCB0x84() { OPCode_RES(0, H); }
+void CPU::OPCodeCB0x85() { OPCode_RES(0, L); }
+void CPU::OPCodeCB0x86() { OPCode_RES(0, Address(HL)); }
+void CPU::OPCodeCB0x87() { OPCode_RES(0, A); }
+void CPU::OPCodeCB0x88() { OPCode_RES(1, B); }
+void CPU::OPCodeCB0x89() { OPCode_RES(1, C); }
+void CPU::OPCodeCB0x8A() { OPCode_RES(1, D); }
+void CPU::OPCodeCB0x8B() { OPCode_RES(1, E); }
+void CPU::OPCodeCB0x8C() { OPCode_RES(1, H); }
+void CPU::OPCodeCB0x8D() { OPCode_RES(1, L); }
+void CPU::OPCodeCB0x8E() { OPCode_RES(1, Address(HL)); }
+void CPU::OPCodeCB0x8F() { OPCode_RES(1, A); }
+void CPU::OPCodeCB0x90() { OPCode_RES(2, B); }
+void CPU::OPCodeCB0x91() { OPCode_RES(2, C); }
+void CPU::OPCodeCB0x92() { OPCode_RES(2, D); }
+void CPU::OPCodeCB0x93() { OPCode_RES(2, E); }
+void CPU::OPCodeCB0x94() { OPCode_RES(2, H); }
+void CPU::OPCodeCB0x95() { OPCode_RES(2, L); }
+void CPU::OPCodeCB0x96() { OPCode_RES(2, Address(HL)); }
+void CPU::OPCodeCB0x97() { OPCode_RES(2, A); }
+void CPU::OPCodeCB0x98() { OPCode_RES(3, B); }
+void CPU::OPCodeCB0x99() { OPCode_RES(3, C); }
+void CPU::OPCodeCB0x9A() { OPCode_RES(3, D); }
+void CPU::OPCodeCB0x9B() { OPCode_RES(3, E); }
+void CPU::OPCodeCB0x9C() { OPCode_RES(3, H); }
+void CPU::OPCodeCB0x9D() { OPCode_RES(3, L); }
+void CPU::OPCodeCB0x9E() { OPCode_RES(3, Address(HL)); }
+void CPU::OPCodeCB0x9F() { OPCode_RES(3, A); }
+void CPU::OPCodeCB0xA0() { OPCode_RES(4, B); }
+void CPU::OPCodeCB0xA1() { OPCode_RES(4, C); }
+void CPU::OPCodeCB0xA2() { OPCode_RES(4, D); }
+void CPU::OPCodeCB0xA3() { OPCode_RES(4, E); }
+void CPU::OPCodeCB0xA4() { OPCode_RES(4, H); }
+void CPU::OPCodeCB0xA5() { OPCode_RES(4, L); }
+void CPU::OPCodeCB0xA6() { OPCode_RES(4, Address(HL)); }
+void CPU::OPCodeCB0xA7() { OPCode_RES(4, A); }
+void CPU::OPCodeCB0xA8() { OPCode_RES(5, B); }
+void CPU::OPCodeCB0xA9() { OPCode_RES(5, C); }
+void CPU::OPCodeCB0xAA() { OPCode_RES(5, D); }
+void CPU::OPCodeCB0xAB() { OPCode_RES(5, E); }
+void CPU::OPCodeCB0xAC() { OPCode_RES(5, H); }
+void CPU::OPCodeCB0xAD() { OPCode_RES(5, L); }
+void CPU::OPCodeCB0xAE() { OPCode_RES(5, Address(HL)); }
+void CPU::OPCodeCB0xAF() { OPCode_RES(5, A); }
+void CPU::OPCodeCB0xB0() { OPCode_RES(6, B); }
+void CPU::OPCodeCB0xB1() { OPCode_RES(6, C); }
+void CPU::OPCodeCB0xB2() { OPCode_RES(6, D); }
+void CPU::OPCodeCB0xB3() { OPCode_RES(6, E); }
+void CPU::OPCodeCB0xB4() { OPCode_RES(6, H); }
+void CPU::OPCodeCB0xB5() { OPCode_RES(6, L); }
+void CPU::OPCodeCB0xB6() { OPCode_RES(6, Address(HL)); }
+void CPU::OPCodeCB0xB7() { OPCode_RES(6, A); }
+void CPU::OPCodeCB0xB8() { OPCode_RES(7, B); }
+void CPU::OPCodeCB0xB9() { OPCode_RES(7, C); }
+void CPU::OPCodeCB0xBA() { OPCode_RES(7, D); }
+void CPU::OPCodeCB0xBB() { OPCode_RES(7, E); }
+void CPU::OPCodeCB0xBC() { OPCode_RES(7, H); }
+void CPU::OPCodeCB0xBD() { OPCode_RES(7, L); }
+void CPU::OPCodeCB0xBE() { OPCode_RES(7, Address(HL)); }
+void CPU::OPCodeCB0xBF() { OPCode_RES(7, A); }
+void CPU::OPCodeCB0xC0() { OPCode_SET(0, B); }
+void CPU::OPCodeCB0xC1() { OPCode_SET(0, C); }
+void CPU::OPCodeCB0xC2() { OPCode_SET(0, D); }
+void CPU::OPCodeCB0xC3() { OPCode_SET(0, E); }
+void CPU::OPCodeCB0xC4() { OPCode_SET(0, H); }
+void CPU::OPCodeCB0xC5() { OPCode_SET(0, L); }
+void CPU::OPCodeCB0xC6() { OPCode_SET(0, Address(HL)); }
+void CPU::OPCodeCB0xC7() { OPCode_SET(0, A); }
+void CPU::OPCodeCB0xC8() { OPCode_SET(1, B); }
+void CPU::OPCodeCB0xC9() { OPCode_SET(1, C); }
+void CPU::OPCodeCB0xCA() { OPCode_SET(1, D); }
+void CPU::OPCodeCB0xCB() { OPCode_SET(1, E); }
+void CPU::OPCodeCB0xCC() { OPCode_SET(1, H); }
+void CPU::OPCodeCB0xCD() { OPCode_SET(1, L); }
+void CPU::OPCodeCB0xCE() { OPCode_SET(1, Address(HL)); }
+void CPU::OPCodeCB0xCF() { OPCode_SET(1, A); }
+void CPU::OPCodeCB0xD0() { OPCode_SET(2, B); }
+void CPU::OPCodeCB0xD1() { OPCode_SET(2, C); }
+void CPU::OPCodeCB0xD2() { OPCode_SET(2, D); }
+void CPU::OPCodeCB0xD3() { OPCode_SET(2, E); }
+void CPU::OPCodeCB0xD4() { OPCode_SET(2, H); }
+void CPU::OPCodeCB0xD5() { OPCode_SET(2, L); }
+void CPU::OPCodeCB0xD6() { OPCode_SET(2, Address(HL)); }
+void CPU::OPCodeCB0xD7() { OPCode_SET(2, A); }
+void CPU::OPCodeCB0xD8() { OPCode_SET(3, B); }
+void CPU::OPCodeCB0xD9() { OPCode_SET(3, C); }
+void CPU::OPCodeCB0xDA() { OPCode_SET(3, D); }
+void CPU::OPCodeCB0xDB() { OPCode_SET(3, E); }
+void CPU::OPCodeCB0xDC() { OPCode_SET(3, H); }
+void CPU::OPCodeCB0xDD() { OPCode_SET(3, L); }
+void CPU::OPCodeCB0xDE() { OPCode_SET(3, Address(HL)); }
+void CPU::OPCodeCB0xDF() { OPCode_SET(3, A); }
+void CPU::OPCodeCB0xE0() { OPCode_SET(4, B); }
+void CPU::OPCodeCB0xE1() { OPCode_SET(4, C); }
+void CPU::OPCodeCB0xE2() { OPCode_SET(4, D); }
+void CPU::OPCodeCB0xE3() { OPCode_SET(4, E); }
+void CPU::OPCodeCB0xE4() { OPCode_SET(4, H); }
+void CPU::OPCodeCB0xE5() { OPCode_SET(4, L); }
+void CPU::OPCodeCB0xE6() { OPCode_SET(4, Address(HL)); }
+void CPU::OPCodeCB0xE7() { OPCode_SET(4, A); }
+void CPU::OPCodeCB0xE8() { OPCode_SET(5, B); }
+void CPU::OPCodeCB0xE9() { OPCode_SET(5, C); }
+void CPU::OPCodeCB0xEA() { OPCode_SET(5, D); }
+void CPU::OPCodeCB0xEB() { OPCode_SET(5, E); }
+void CPU::OPCodeCB0xEC() { OPCode_SET(5, H); }
+void CPU::OPCodeCB0xED() { OPCode_SET(5, L); }
+void CPU::OPCodeCB0xEE() { OPCode_SET(5, Address(HL)); }
+void CPU::OPCodeCB0xEF() { OPCode_SET(5, A); }
+void CPU::OPCodeCB0xF0() { OPCode_SET(6, B); }
+void CPU::OPCodeCB0xF1() { OPCode_SET(6, C); }
+void CPU::OPCodeCB0xF2() { OPCode_SET(6, D); }
+void CPU::OPCodeCB0xF3() { OPCode_SET(6, E); }
+void CPU::OPCodeCB0xF4() { OPCode_SET(6, H); }
+void CPU::OPCodeCB0xF5() { OPCode_SET(6, L); }
+void CPU::OPCodeCB0xF6() { OPCode_SET(6, Address(HL)); }
+void CPU::OPCodeCB0xF7() { OPCode_SET(6, A); }
+void CPU::OPCodeCB0xF8() { OPCode_SET(7, B); }
+void CPU::OPCodeCB0xF9() { OPCode_SET(7, C); }
+void CPU::OPCodeCB0xFA() { OPCode_SET(7, D); }
+void CPU::OPCodeCB0xFB() { OPCode_SET(7, E); }
+void CPU::OPCodeCB0xFC() { OPCode_SET(7, H); }
+void CPU::OPCodeCB0xFD() { OPCode_SET(7, L); }
+void CPU::OPCodeCB0xFE() { OPCode_SET(7, Address(HL)); }
+void CPU::OPCodeCB0xFF() { OPCode_SET(7, A); }

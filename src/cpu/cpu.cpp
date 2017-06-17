@@ -124,16 +124,16 @@ void CPU::pop(IWordRegister& reg) {
 
 Cycles CPU::executeNormalOPCode(u8 opcode, u16 OPCodePC) {
     OPCptr* opcodeTable = OPCodes;
-    (this->*opcodeTable[opcode])();
-    return !branchTaken ?
+    (this->*opcodeTable[opcode])(); //execute opcode
+    return !branchTaken ? //return number of cycles taken
             OPCodeMachineCycles[opcode]
           : OPCodeBranchMachineCycles[opcode];
 }
 
 Cycles CPU::executeCBOPCode(u8 opcode, u16 OPCodePC) {
     OPCptr* opcodeTable = OPCodesCB;
-    (this->*opcodeTable[opcode])();
-    return OPCodeCBMachineCycles[opcode];
+    (this->*opcodeTable[opcode])(); //execute opcode
+    return OPCodeCBMachineCycles[opcode]; //return number of cycles taken
 }
 
 bool CPU::isHalted() const {
@@ -141,7 +141,6 @@ bool CPU::isHalted() const {
 }
 
 void CPU::InitOPCodeFunctors() {
-    /*
     OPCodes[0x00] = &CPU::OPCode0x00;
     OPCodes[0x01] = &CPU::OPCode0x01;
     OPCodes[0x02] = &CPU::OPCode0x02;
@@ -414,7 +413,7 @@ void CPU::InitOPCodeFunctors() {
     OPCodes[0xFE] = &CPU::OPCode0xFE;
     OPCodes[0xFF] = &CPU::OPCode0xFF;
 
-
+    /*
     OPCodesCB[0x00] = &CPU::OPCodeCB0x00;
     OPCodesCB[0x01] = &CPU::OPCodeCB0x01;
     OPCodesCB[0x02] = &CPU::OPCodeCB0x02;
