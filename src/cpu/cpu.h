@@ -52,7 +52,7 @@ private:
     void push(const IWordRegister& reg);
     void pop(IWordRegister& reg);
 
-    ALU* alu;//std::unique_ptr<ALU> alu;
+    std::unique_ptr<ALU> alu;
     std::shared_ptr<MMU> mmu;
 
     ByteRegister A, B, C, D, E, H, L;

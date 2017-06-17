@@ -3,7 +3,7 @@
 #include "opcode_cycles.h"
 
 CPU::CPU(std::shared_ptr<MMU> mmu) :
-    /*alu(std::make_unique<ALU>(&A,&F)),*/ mmu(mmu), AF(&A,&F), BC(&B,&C), DE(&D, &E), HL(&H,&L)
+    alu(std::make_unique<ALU>(&A,&F)), mmu(mmu), AF(&A,&F), BC(&B,&C), DE(&D, &E), HL(&H,&L)
 {
     InitOPCodeFunctors();
 }
@@ -413,7 +413,6 @@ void CPU::InitOPCodeFunctors() {
     OPCodes[0xFE] = &CPU::OPCode0xFE;
     OPCodes[0xFF] = &CPU::OPCode0xFF;
 
-    /*
     OPCodesCB[0x00] = &CPU::OPCodeCB0x00;
     OPCodesCB[0x01] = &CPU::OPCodeCB0x01;
     OPCodesCB[0x02] = &CPU::OPCodeCB0x02;
@@ -685,5 +684,4 @@ void CPU::InitOPCodeFunctors() {
     OPCodesCB[0xFD] = &CPU::OPCodeCB0xFD;
     OPCodesCB[0xFE] = &CPU::OPCodeCB0xFE;
     OPCodesCB[0xFF] = &CPU::OPCodeCB0xFF;
-    */
 }
