@@ -5,8 +5,10 @@ add_sources(
     register.cpp
     address.cpp
     mmu.cpp
+    cartridge.cpp
 
     util.h
+    cartridge_util.h
 )
 add_subdirectory(cpu)
 add_subdirectory(incl)
