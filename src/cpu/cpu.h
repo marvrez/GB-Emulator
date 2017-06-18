@@ -15,6 +15,7 @@ enum class Condition {
     C,
 };
 
+
 class CPU {
 public:
     CPU(std::shared_ptr<MMU> mmu);
@@ -26,8 +27,8 @@ public:
     Cycles executeNormalOPCode(u8 opcode, u16 OPCodePC);
     Cycles executeCBOPCode(u8 opcode, u16 OPCodePC);
 
-    ByteRegister interruptFlag; //address: $0xFF0F
-    ByteRegister interruptEnabled; //address $0xFFFF
+    static const u16 INTERRUPT_FLAG = 0xFF0F;
+    static const u16 INTERRUPTS_ENABLED = 0xFFFF;
 
     bool isHalted() const;
 private:

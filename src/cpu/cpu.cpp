@@ -21,44 +21,21 @@ Cycles CPU::executeOPCode(u8 opcode, u16 OPCodePC) {
 }
 
 void CPU::handleInterrupts() {
-    /*
-    if (interruptsEnabled) {
-        u8 firedInterrupts = interruptFlag.getValue() & interruptEnabled.getValue();
-
-        if (!firedInterrupts) return;
-
-        push(PC);
-
-        bool handledInterrupt = false;
-
-        handledInterrupt = handleInterrupt(0, Interrupts::VBLANK, firedInterrupts);
-        if (handledInterrupt) return;
-
-        handledInterrupt = handleInterrupt(1, Interrupts::LCDC_STATUS, firedInterrupts);
-        if (handledInterrupt) return;
-
-        handledInterrupt = handleInterrupt(2, Interrupts::TIMER, firedInterrupts);
-        if (handledInterrupt) return;
-
-        handledInterrupt = handleInterrupt(3, Interrupts::SERIAL, firedInterrupts);
-        if (handledInterrupt) return;
-
-        handledInterrupt = handleInterrupt(4, Interrupts::JOYPAD, firedInterrupts);
-        if (handledInterrupt) return;
-    }
-    */
     using BitOperations::checkBit;
 
     if (interruptsEnabled == false && halted == false)
         return;
-    u8 firedInterrupts = interruptFlag.getValue() & interruptEnabled.getValue();
+
+    u8 interruptOccurred = mmu->readByte(0xFF0F);
+    u8 interruptEnabled = mmu->readByte(0xFFFF);
+    u8 firedInterrupts = interruptOccurred & interruptEnabled;
     if(!firedInterrupts) return;
     for (unsigned interruptBit = 0; interruptBit < 5; ++interruptBit) {
         if (checkBit(firedInterrupts, interruptBit)) {
             halted = false;
             if (interruptsEnabled) {
                 interruptsEnabled = false;
-                interruptFlag.setBitTo(interruptBit, 0);
+                mmu->writeByte(INTERRUPT_FLAG, interruptOccurred & ~(1u << interruptBit));
                 OPCode_RST(0x0040 | (interruptBit << 3));
                 return;
             }
