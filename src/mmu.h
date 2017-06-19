@@ -2,12 +2,25 @@
 #define MMU_H
 
 #include "address.h"
+#include "cartridge.h"
+#include "mbc.h"
+
+#include <vector>
+#include <memory>
+#include <string>
 
 class MMU {
 public:
-  void writeByte(const Address& address, u8 byte);
-  u8 readByte(const Address& address);
+    MMU(std::unique_ptr<Cartridge>& c);
+    ~MMU();
+    void reset();
+
+    void writeByte(const Address& address, u8 byte);
+    u8 readByte(const Address& address);
 private:
+    std::unique_ptr<MBC> mbc;
+    std::vector<u8> wram, vram, voam, zram;
+    std::unique_ptr<Cartridge> cartridge;
 };
 
 #endif

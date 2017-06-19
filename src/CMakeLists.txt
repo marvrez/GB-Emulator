@@ -12,4 +12,5 @@ add_sources(
     cartridge_util.h
 )
 add_subdirectory(cpu)
+add_subdirectory(gpu)
 add_subdirectory(incl)
