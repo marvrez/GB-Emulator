@@ -50,3 +50,7 @@ const std::vector<u8>& Cartridge::getData() const {
 CartridgeType Cartridge::getType() const {
     return this->cartridgeType;
 }
+
+std::string Cartridge::getGametitle() const {
+    return this->gametitle;
+}

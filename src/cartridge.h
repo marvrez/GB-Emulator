@@ -14,6 +14,7 @@ public:
     std::string getFilename() const;
     const std::vector<u8>& getData() const;
     CartridgeType getType()  const;
+    std::string getGametitle() const;
 private:
     std::string filename;
     std::string gametitle;
