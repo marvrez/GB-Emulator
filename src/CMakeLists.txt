@@ -5,6 +5,7 @@ add_sources(
     register.cpp
     address.cpp
     mmu.cpp
+    mbc.cpp
     cartridge.cpp
 
     util.h

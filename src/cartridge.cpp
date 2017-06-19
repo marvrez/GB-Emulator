@@ -43,7 +43,7 @@ std::string Cartridge::getFilename() const {
     return this->filename;
 }
 
-const std::vector<u8> &Cartridge::getData() const {
+const std::vector<u8>& Cartridge::getData() const {
     return this->data;
 }
 

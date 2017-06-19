@@ -21,7 +21,7 @@ namespace COLOR_UTIL {
     #define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
     #define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
     #define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
-    auto Color(int n, const std::string& s) {
+    inline auto Color(int n, const std::string& s) {
         return "\33[38;5;" + std::to_string(n) + 'm' + s + "\33[m";
     }
 } //namespace Color
