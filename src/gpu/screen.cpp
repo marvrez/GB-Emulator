@@ -1,12 +1,11 @@
 #include "screen.h"
 
-Screen::Screen(std::string gametitle, bool wholeFramebuffer, u32 magnification) :
+Screen::Screen(std::string gametitle, u32 magnification) :
     magnification(magnification),
-    wholeFramebuffer(wholeFramebuffer),
-    logicalHeight(wholeFramebuffer ? FrameBuffer::FRAMEBUFFER_SIZE : GAMEBOY_HEIGHT),
-    logicalWidth(wholeFramebuffer ? FrameBuffer::FRAMEBUFFER_SIZE : GAMEBOY_WIDTH),
-    width(logicalWidth*magnification),
-    height(logicalHeight*magnification),
+    logicalHeight(GAMEBOY_HEIGHT),
+    logicalWidth(GAMEBOY_WIDTH),
+    width(logicalWidth * magnification),
+    height(logicalHeight * magnification),
     pixelSize(magnification),
     renderWindow(sf::VideoMode(width, height), gametitle, sf::Style::Titlebar | sf::Style::Close)
 {
@@ -41,11 +40,11 @@ bool Screen::isOpen() {
 void Screen::setPixelsOnImage(const FrameBuffer& buffer, u32 scrollX, u32 scrollY, const BGPalette& bgPalette) {
     for (u32 y = 0; y < logicalHeight; ++y) {
          for (u32 x = 0; x < logicalWidth; ++x) {
-             u32 bufferY = wholeFramebuffer ? y : (scrollY + y) % FrameBuffer::FRAMEBUFFER_SIZE;
-             u32 bufferX = wholeFramebuffer ? x : (scrollX + x) % FrameBuffer::FRAMEBUFFER_SIZE;
+             u32 bufferY = (scrollY + y) % FrameBuffer::FRAMEBUFFER_SIZE;
+             u32 bufferX = (scrollX + x) % FrameBuffer::FRAMEBUFFER_SIZE;
 
              Color color = getColor(buffer.getPixel(bufferX, bufferY), bgPalette);
-             this->setLargePixel(x, y, getSFColor(color));
+             this->setLargePixel(x, y, getSFMLColor(color));
          }
      }
 }
@@ -53,7 +52,7 @@ void Screen::setPixelsOnImage(const FrameBuffer& buffer, u32 scrollX, u32 scroll
 void Screen::setLargePixel(u32 x, u32 y, sf::Color color) {
     for(u32 h = 0; h < pixelSize; ++h)
         for(u32 w = 0; w < pixelSize; ++w)
-            image.setPixel((x*pixelSize) + w, (y*pixelSize) + h, color);
+            this->image.setPixel((x*pixelSize) + w, (y*pixelSize) + h, color);
 }
 
 Color Screen::getColor(GBColor color, const BGPalette& bgPalette) {
@@ -65,7 +64,7 @@ Color Screen::getColor(GBColor color, const BGPalette& bgPalette) {
     }
 }
 
-sf::Color Screen::getSFColor(Color color) {
+sf::Color Screen::getSFMLColor(Color color) {
     switch (color) {
         case Color::White: 		return sf::Color::White;
         case Color::LightGray: 	return sf::Color(170, 170, 170);

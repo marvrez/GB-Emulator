@@ -25,7 +25,7 @@ enum class GBColor {
     Color3,
 };
 
-enum class Color {
+enum class Color { //real colors
     White,
     LightGray,
     DarkGray,

@@ -12,7 +12,7 @@ class CPU;
 
 class Screen {
 public:
-    Screen(std::string gametitle, bool wholeFramebuffer = false, u32 magnification = 5);
+    Screen(std::string gametitle, u32 magnification = 5);
     ~Screen() = default;
 
     void draw(const FrameBuffer& buffer, u32 scrollX, u32 scrollY, const BGPalette& bgPalette) ;
@@ -20,7 +20,6 @@ public:
 
 private:
     const u32 magnification;
-    bool wholeFramebuffer;
 
     const u32 logicalWidth, logicalHeight;
     const u32 width, height;
@@ -35,7 +34,7 @@ private:
     void setLargePixel(u32 x, u32 y, sf::Color color);
 
     Color getColor(GBColor color, const BGPalette& bgPalette);
-    sf::Color getSFColor(Color color);
+    sf::Color getSFMLColor(Color color);
 
 
 };

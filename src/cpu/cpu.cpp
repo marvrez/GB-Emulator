@@ -10,7 +10,10 @@ CPU::CPU(std::shared_ptr<MMU> mmu) :
 
 Cycles CPU::tick() {
     handleInterrupts();
-    if(halted) return OPCodeMachineCycles[0x00];
+
+    if(halted) //spin at NOP if halted
+        return OPCodeMachineCycles[0x00]; //OPCode_NOP();
+
     return executeOPCode(getByteFromPC(), PC.getValue()); //getopcode from PC and execute..
 }
 
@@ -26,8 +29,8 @@ void CPU::handleInterrupts() {
     if (interruptsEnabled == false && halted == false)
         return;
 
-    u8 interruptOccurred = mmu->readByte(0xFF0F);
-    u8 interruptEnabled = mmu->readByte(0xFFFF);
+    u8 interruptOccurred = mmu->readByte(INTERRUPT_FLAG);
+    u8 interruptEnabled = mmu->readByte(INTERRUPTS_ENABLED);
     u8 firedInterrupts = interruptOccurred & interruptEnabled;
     if(!firedInterrupts) return;
     for (unsigned interruptBit = 0; interruptBit < 5; ++interruptBit) {

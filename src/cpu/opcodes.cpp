@@ -16,7 +16,7 @@ void CPU::OPCode0x0C() { OPCode_INC(C); }
 void CPU::OPCode0x0D() { OPCode_DEC(C); }
 void CPU::OPCode0x0E() { OPCode_LD(C); }
 void CPU::OPCode0x0F() { OPCode_RRC(); }
-void CPU::OPCode0x10() { OPCode_STOP(); }
+void CPU::OPCode0x10() { OPCode_HALT();/*OPCode_STOP();*/ }
 void CPU::OPCode0x11() { OPCode_LD(DE); }
 void CPU::OPCode0x12() { OPCode_LD(Address(DE), A); }
 void CPU::OPCode0x13() { OPCode_INC(DE); }

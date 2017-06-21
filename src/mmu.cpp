@@ -141,7 +141,7 @@ void MMU::writeByte(const Address& address, u8 byte) {
             if(addressValue < 0xFEA0) voam[addressValue & 0xFF] = byte;
             break;
 
-        // Zeropage RAM, I/O
+        // Zeropage RAM, I/O - audio, keypad, gpu
         case 0xF00:
             zram[addressValue & 0xFF] = byte;
             break;
