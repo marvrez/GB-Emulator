@@ -33,7 +33,6 @@ private:
     void setPixelsOnImage(const FrameBuffer& buffer, u32 scrollX, u32 scrollY, const BGPalette& bgPalette);
     void setLargePixel(u32 x, u32 y, sf::Color color);
 
-    Color getColor(GBColor color, const BGPalette& bgPalette);
     sf::Color getSFMLColor(Color color);
 
 

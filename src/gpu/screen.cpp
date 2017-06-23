@@ -43,7 +43,7 @@ void Screen::setPixelsOnImage(const FrameBuffer& buffer, u32 scrollX, u32 scroll
              u32 bufferY = (scrollY + y) % FrameBuffer::FRAMEBUFFER_SIZE;
              u32 bufferX = (scrollX + x) % FrameBuffer::FRAMEBUFFER_SIZE;
 
-             Color color = getColor(buffer.getPixel(bufferX, bufferY), bgPalette);
+             Color color = buffer.getPixel(bufferX, bufferY);
              this->setLargePixel(x, y, getSFMLColor(color));
          }
      }
@@ -53,15 +53,6 @@ void Screen::setLargePixel(u32 x, u32 y, sf::Color color) {
     for(u32 h = 0; h < pixelSize; ++h)
         for(u32 w = 0; w < pixelSize; ++w)
             this->image.setPixel((x*pixelSize) + w, (y*pixelSize) + h, color);
-}
-
-Color Screen::getColor(GBColor color, const BGPalette& bgPalette) {
-    switch (color) {
-        case GBColor::Color0: return bgPalette.color0;
-        case GBColor::Color1: return bgPalette.color1;
-        case GBColor::Color2: return bgPalette.color2;
-        case GBColor::Color3: return bgPalette.color3;
-    }
 }
 
 sf::Color Screen::getSFMLColor(Color color) {

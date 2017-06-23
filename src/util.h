@@ -18,13 +18,6 @@ static const int GAMEBOY_HEIGHT = 144;
 
 static const int CLOCK_RATE = 4194304;
 
-enum class GBColor {
-    Color0,
-    Color1,
-    Color2,
-    Color3,
-};
-
 enum class Color { //real colors
     White,
     LightGray,
