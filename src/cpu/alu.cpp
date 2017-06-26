@@ -15,14 +15,14 @@ ALU::ALU(ByteRegister* A, FlagRegister* F)
 
 void ALU::adc(u8 value) {
     u8 carry = F->getFlagCarry();
-    u16 fullResult = A->getValue() + value + carry;
+    u32 fullResult = A->getValue() + value + carry;
     u8 result = static_cast<u8>(fullResult);
 
     A->setValue(result);
 
     F->setFlagZero(result == 0);
     F->setFlagSubtract(0);
-    F->setFlagHalfCarry(((A->getValue() & 0x0F) + (value & 0x0F) + carry) > 0x0F);
+    F->setFlagHalfCarry(((A->getValue() & 0xF) + (value & 0xF) + carry) > 0xF);
     F->setFlagCarry(fullResult > 0xFF);
 }
 
@@ -33,7 +33,7 @@ void ALU::add(u8 val1, u8 val2) {
 
     F->setFlagZero(A->getValue() == 0);
     F->setFlagSubtract(0);
-    F->setFlagHalfCarry((val1 & 0x0F) + (val2 & 0x0F) > 0x0F);
+    F->setFlagHalfCarry((val1 & 0xF) + (val2 & 0xF) > 0xF);
     F->setFlagCarry((result & 0x100) != 0);
 }
 
@@ -93,8 +93,8 @@ void ALU::_xor(u8 value) {
 
 void ALU::bit(const u8 bit, const u8 value) {
     F->setFlagZero(!checkBit(value,bit));
-    F->setFlagHalfCarry(0);
-    F->setFlagSubtract(1);
+    F->setFlagHalfCarry(1);
+    F->setFlagSubtract(0);
 }
 
 void ALU::cp(const u8 value) {
@@ -207,7 +207,7 @@ void ALU::ccf() {
 }
 
 void ALU::cpl() {
-    A->setValue(~A->getValue());
+    A->setValue(~(A->getValue()));
 
     F->setFlagSubtract(1);
     F->setFlagHalfCarry(1);
