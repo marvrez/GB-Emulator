@@ -128,8 +128,8 @@ void CPU::OPCode0x7C() { OPCode_LD(A, H); }
 void CPU::OPCode0x7D() { OPCode_LD(A, L); }
 void CPU::OPCode0x7E() { OPCode_LD(A, Address(HL)); }
 void CPU::OPCode0x7F() { OPCode_LD(A, A); }
-void CPU::OPCode0x80() { OPCode_ADD(C); }
-void CPU::OPCode0x81() { OPCode_ADD(B); }
+void CPU::OPCode0x80() { OPCode_ADD(B); }
+void CPU::OPCode0x81() { OPCode_ADD(C); }
 void CPU::OPCode0x82() { OPCode_ADD(D); }
 void CPU::OPCode0x83() { OPCode_ADD(E); }
 void CPU::OPCode0x84() { OPCode_ADD(H); }
