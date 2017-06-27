@@ -7,9 +7,11 @@ add_sources(
     mmu.cpp
     mbc.cpp
     cartridge.cpp
+    gameboy.cpp
 
     util.h
     cartridge_util.h
+    boot_roms.h
 )
 add_subdirectory(cpu)
 add_subdirectory(gpu)

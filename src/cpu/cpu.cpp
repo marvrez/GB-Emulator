@@ -1,38 +1,53 @@
 #include "cpu.h"
 
 #include "opcode_cycles.h"
+#include <cstdio>
 
 CPU::CPU(std::shared_ptr<MMU> mmu) :
     alu(std::make_unique<ALU>(&A,&F)), mmu(mmu), AF(&A,&F), BC(&B,&C), DE(&D, &E), HL(&H,&L)
 {
     InitOPCodeFunctors();
+    interruptsEnabled = false;
+    halted = false;
+    branchTaken = false;
+
+    AF.setValue(0x01B0);
+    BC.setValue(0x0013);
+    DE.setValue(0x00D8);
+    HL.setValue(0x014D);
+    SP.setValue(0xFFFE);
+    PC.setValue(0x0100);
 }
 
 Cycles CPU::tick() {
-    handleInterrupts();
+    if(handleInterrupts()) return 0;
 
     if(halted) //spin at NOP if halted
         return OPCodeMachineCycles[0x00]; //OPCode_NOP();
 
-    return executeOPCode(getByteFromPC(), PC.getValue()); //getopcode from PC and execute..
+    u16 opcode_pc = PC.getValue();
+    auto opcode = getByteFromPC();
+    auto cycles = executeOPCode(opcode, opcode_pc);
+    return cycles;
 }
 
 Cycles CPU::executeOPCode(u8 opcode, u16 OPCodePC) {
     branchTaken = false;
-    if (opcode == 0xCB) return executeCBOPCode(getByteFromPC(), OPCodePC);
+    //printf("OPCODE 0x%X \n", opcode);
+    if (opcode == 0xCB) return executeCBOPCode(getByteFromPC(), OPCodePC); //get new opcode
     else return executeNormalOPCode(opcode, OPCodePC);
 }
 
-void CPU::handleInterrupts() {
+bool CPU::handleInterrupts() {
     using BitOperations::checkBit;
 
     if (interruptsEnabled == false && halted == false)
-        return;
+        return false;
 
     u8 interruptOccurred = mmu->readByte(INTERRUPT_FLAG);
     u8 interruptEnabled = mmu->readByte(INTERRUPTS_ENABLED);
     u8 firedInterrupts = interruptOccurred & interruptEnabled;
-    if(!firedInterrupts) return;
+    if(!firedInterrupts) return false;
     for (unsigned interruptBit = 0; interruptBit < 5; ++interruptBit) {
         if (checkBit(firedInterrupts, interruptBit)) {
             halted = false;
@@ -40,11 +55,12 @@ void CPU::handleInterrupts() {
                 interruptsEnabled = false;
                 mmu->writeByte(INTERRUPT_FLAG, interruptOccurred & ~(1u << interruptBit));
                 OPCode_RST(0x0040 | (interruptBit << 3));
-                return;
+                return true;
             }
-            return;
+            return false;
         }
     }
+    return false;
 }
 
 bool CPU::isCondition(Condition condition) {
@@ -66,7 +82,7 @@ bool CPU::isCondition(Condition condition) {
     }
 
     //remember branch so correct cycles are to be used
-    return branchTaken = shouldBranch;
+    return this->branchTaken = shouldBranch;
 }
 
 u8 CPU::getByteFromPC() { //fetch opcode

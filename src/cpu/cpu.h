@@ -37,11 +37,11 @@ private:
     OPCptr OPCodesCB[256];
     void InitOPCodeFunctors();
 
-    bool interruptsEnabled = false;
-    bool branchTaken = false;
-    bool halted = false;
+    bool interruptsEnabled;
+    bool branchTaken;
+    bool halted;
 
-    void handleInterrupts();
+    bool handleInterrupts();
 
     bool isCondition(Condition condition);
 
