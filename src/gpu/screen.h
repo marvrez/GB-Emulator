@@ -7,9 +7,6 @@
 
 #include <SFML/Graphics.hpp>
 
-class MMU;
-class CPU;
-
 class Screen {
 public:
     Screen(std::string gametitle, u32 magnification = 5);

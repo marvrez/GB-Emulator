@@ -10,7 +10,7 @@ Screen::Screen(std::string gametitle, u32 magnification) :
     renderWindow(sf::VideoMode(width, height), gametitle, sf::Style::Titlebar | sf::Style::Close)
 {
     renderWindow.setFramerateLimit(60);
-    renderWindow.setVerticalSyncEnabled(60);
+    renderWindow.setVerticalSyncEnabled(true);
 
     image.create(width, height);
 }
