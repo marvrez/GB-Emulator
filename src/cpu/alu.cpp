@@ -18,12 +18,12 @@ void ALU::adc(u8 value) {
     u32 fullResult = A->getValue() + value + carry;
     u8 result = static_cast<u8>(fullResult);
 
-    A->setValue(result);
 
     F->setFlagZero(result == 0);
     F->setFlagSubtract(0);
     F->setFlagHalfCarry(((A->getValue() & 0xF) + (value & 0xF) + carry) > 0xF);
     F->setFlagCarry(fullResult > 0xFF);
+    A->setValue(result);
 }
 
 void ALU::add(u8 val1, u8 val2) {
