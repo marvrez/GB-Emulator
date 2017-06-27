@@ -52,7 +52,7 @@ inline void CPU::OPCode_ADD_HL(const IWordRegister& reg) {
 inline void CPU::OPCode_ADD_SP() {
     u16 spValue = SP.getValue();
     s8 pcValue = getSignedByteFromPC();
-    s32 result = static_cast<u32>(spValue + pcValue);
+    s32 result = static_cast<s32>(spValue + pcValue);
 
     F.setFlagZero(0);
     F.setFlagSubtract(0);
@@ -193,7 +193,7 @@ inline void CPU::OPCode_DEC(IWordRegister& reg) {
 }
 
 inline void CPU::OPCode_DEC(Address&& addr) {
-    u8 result = static_cast<u8>(mmu->readByte(addr)- 1);
+    u8 result = static_cast<u8>(mmu->readByte(addr) - 1);
     mmu->writeByte(addr, result);
 
     F.setFlagZero(result == 0);
