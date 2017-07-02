@@ -2,6 +2,11 @@
 
 #include "cpu/cpu.h"
 
+constexpr int Divider = 0xFF04;
+constexpr int TimerCounter =  0xFF05;
+constexpr int TimerModulo = 0xFF06;
+constexpr int TimerControl = 0xFF07;
+
 Timer::Timer(std::shared_ptr<MMU> &mmu) :
     mmu(mmu),
     internalCounter(0)
@@ -12,10 +17,10 @@ void Timer::tick(Cycles cycle) {
     bool interrupt = false;
     u8 divider, counter, modulo, control;
 
-    divider = mmu->readByte(0xFF04); //Divider
-    counter = mmu->readByte(0xFF05); //Timer counter
-    modulo = mmu->readByte(0xFF06); //timer modulo
-    control = mmu->readByte(0xFF07); //timer control
+    divider = mmu->readByte(Divider); //Divider
+    counter = mmu->readByte(TimerCounter); //Timer counter
+    modulo = mmu->readByte(TimerModulo); //timer modulo
+    control = mmu->readByte(TimerControl); //timer control
 
     int step = 0;
     switch (control & 0x3) {
@@ -43,9 +48,9 @@ void Timer::tick(Cycles cycle) {
         }
     }
 
-    mmu->writeByte(0xFF04, divider);
-    mmu->writeByte(0xFF05, counter);
-    mmu->writeByte(0xFF06, modulo);
+    mmu->writeByte(Divider, divider);
+    mmu->writeByte(TimerCounter, counter);
+    mmu->writeByte(TimerModulo, modulo);
 
     if (interrupt)
         mmu->writeByte(CPU::INTERRUPT_FLAG, mmu->readByte(CPU::INTERRUPT_FLAG) | 0x04);
