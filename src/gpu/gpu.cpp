@@ -350,10 +350,6 @@ void GPU::postprocessRAM() {
     }
 }
 
-BGPalette GPU::getBGPalette() const {
-    return {bgPalette[0], bgPalette[1], bgPalette[2], bgPalette[3]};
-}
-
 void GPU::renderFrame() {
-    screen->draw(buffer, xScroll.getValue(), yScroll.getValue(), getBGPalette());
+    screen->draw(buffer);
 }

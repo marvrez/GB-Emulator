@@ -16,7 +16,7 @@ Screen::Screen(/*std::shared_ptr<Keypad>& keypad,*/ std::string gametitle, u32 m
     image.create(width, height);
 }
 
-void Screen::draw(const FrameBuffer &buffer, u32 scrollX, u32 scrollY, const BGPalette &bgPalette) {
+void Screen::draw(const FrameBuffer &buffer) {
     renderWindow.clear(sf::Color::White);
 
     sf::Event event;
@@ -36,7 +36,7 @@ void Screen::draw(const FrameBuffer &buffer, u32 scrollX, u32 scrollY, const BGP
 
     }
 
-    setPixelsOnImage(buffer, scrollX, scrollY, bgPalette);
+    setPixelsOnImage(buffer);
     texture.loadFromImage(image);
     sprite.setTexture(texture, true);
     renderWindow.draw(sprite);
@@ -52,11 +52,11 @@ void Screen::setKeypad(std::shared_ptr<Keypad> keypad) {
     this->keypad = keypad;
 }
 
-void Screen::setPixelsOnImage(const FrameBuffer& buffer, u32 scrollX, u32 scrollY, const BGPalette& bgPalette) {
+void Screen::setPixelsOnImage(const FrameBuffer& buffer) {
     for (u32 y = 0; y < logicalHeight; ++y) {
          for (u32 x = 0; x < logicalWidth; ++x) {
-             u32 bufferY = (scrollY + y) % FrameBuffer::FRAMEBUFFER_SIZE;
-             u32 bufferX = (scrollX + x) % FrameBuffer::FRAMEBUFFER_SIZE;
+             u32 bufferY = y % FrameBuffer::FRAMEBUFFER_SIZE;
+             u32 bufferX = x % FrameBuffer::FRAMEBUFFER_SIZE;
 
              Color color = buffer.getPixel(bufferX, bufferY);
              this->setLargePixel(x, y, getSFMLColor(color));
