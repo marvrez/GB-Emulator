@@ -2,7 +2,9 @@
 
 #include "cpu/cpu.h"
 
-Keypad::Keypad(std::shared_ptr<MMU> &mmu) :
+#include <SFML/Window/Keyboard.hpp>
+
+Keypad::Keypad(std::shared_ptr<MMU> mmu) :
     mmu(mmu),
     row0(0x0F),
     row1(0x0F),
@@ -10,6 +12,9 @@ Keypad::Keypad(std::shared_ptr<MMU> &mmu) :
 {
 }
 
+/**
+ * Sets bits for inputs that are released (1 = not pressed).
+ */
 void Keypad::keyUp(KeypadKey key) {
     switch (key) {
     case KeypadKey::RIGHT: 	row1 |= 0x1; break;
@@ -25,6 +30,9 @@ void Keypad::keyUp(KeypadKey key) {
     }
 }
 
+/**
+ * Clears bits for inputs that are pressed (0 = pressed).
+ */
 void Keypad::keyDown(KeypadKey key) {
     switch (key) {
     case KeypadKey::RIGHT: 	row1 &= 0xE; break;
@@ -39,6 +47,76 @@ void Keypad::keyDown(KeypadKey key) {
     default: break;
     }
     interrupt = true;
+}
+
+void Keypad::updateInput() {
+    static bool left = false;
+    static bool right = false;
+    static bool up = false;
+    static bool down = false;
+    static bool a = false;
+    static bool b = false;
+    static bool start = false;
+    static bool select = false;
+    // Read button states
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !left) {
+        std::cout << "CLICK" << std::endl;
+        keyDown(KeypadKey::LEFT);
+        left = true;
+    } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && left) {
+        std::cout << "RELEASE" << std::endl;
+        keyUp(KeypadKey::LEFT);
+        left = false;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !right) {
+        keyDown(KeypadKey::RIGHT);
+        right = true;
+    } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && right) {
+        keyUp(KeypadKey::RIGHT);
+        right = false;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !up) {
+        keyDown(KeypadKey::UP);
+        up = true;
+    } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && up) {
+        keyUp(KeypadKey::UP);
+        up = false;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !down) {
+        keyDown(KeypadKey::DOWN);
+        down = true;
+    } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && down) {
+        keyUp(KeypadKey::DOWN);
+        down = false;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::X) && !a) {
+        keyDown(KeypadKey::A);
+        a = true;
+    } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::X) && a) {
+        keyUp(KeypadKey::A);
+        a = false;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && !b) {
+        keyDown(KeypadKey::B);
+        b = true;
+    } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Z) && b) {
+        keyUp(KeypadKey::B);
+        b = false;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && !start) {
+        keyDown(KeypadKey::START);
+        start = true;
+    } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Return) && start) {
+        keyUp(KeypadKey::START);
+        start = false;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) && !select) {
+        keyDown(KeypadKey::SELECT);
+        select = true;
+    } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::RShift) && select) {
+        keyUp(KeypadKey::SELECT);
+        select = false;
+    }
 }
 
 
