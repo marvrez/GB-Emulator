@@ -1,9 +1,10 @@
 #include "gpu.h"
 #include "screen.h"
 
-GPU::GPU(MMU *mmu) :
+GPU::GPU(std::shared_ptr<MMU>& mmu, std::shared_ptr<Screen>& screen) :
     mmu(mmu),
-    buffer(GAMEBOY_HEIGHT, GAMEBOY_WIDTH),
+    screen(screen),
+    buffer(FrameBuffer::FRAMEBUFFER_SIZE, FrameBuffer::FRAMEBUFFER_SIZE),
     mode(VideoMode::HBlank),
     cycleCounter(0),
     scanlineTransfered(false)
@@ -21,8 +22,8 @@ void GPU::tick(Cycles cycle) {
 
     switch(mode) {
     case VideoMode::ReadOAM:
-        if (cycleCounter >= 20) {
-            cycleCounter -= 20;
+        if (cycleCounter >= 80) {
+            cycleCounter -= 80;
             mode = VideoMode::ReadVRAM;
             scanlineTransfered = false;
         }
@@ -32,14 +33,14 @@ void GPU::tick(Cycles cycle) {
             draw();
             scanlineTransfered = true;
         }
-        if (cycleCounter >= 43) {
-            cycleCounter -= 43;
+        if (cycleCounter >= 172) {
+            cycleCounter -= 172;
             mode = VideoMode::HBlank;
         }
         break;
     case VideoMode::HBlank:
-        if (cycleCounter >= 51) {
-            cycleCounter -= 51;
+        if (cycleCounter >= 204) {
+            cycleCounter -= 204;
 
             line.increment();
             if (line.getValue() == 144) {
@@ -50,12 +51,13 @@ void GPU::tick(Cycles cycle) {
         }
         break;
     case VideoMode::VBlank:
-        if (cycleCounter >= 114) {
-            cycleCounter -= 114;
+        if (cycleCounter >= 456) {
+            cycleCounter -= 456;
 
             line.increment();
             // stay 10 iterations in this loop, but increase line the first 9 times
             if (line.getValue() == 154) {
+                renderFrame();
                 mode = VideoMode::ReadOAM;
                 line.reset();
             }
@@ -134,9 +136,15 @@ void GPU::drawBG() {
     for (int x = 0; x < GAMEBOY_WIDTH; ++x, ++bgX) {
         tileX = (bgX >> 3) & 0x1F;
 
-        u8 tilenr = mmu->readByte(tileMapLocation + (tileY * TILES_PER_LINE) + tileX);
-        u8 tileOffset = tilenr * TILES_BYTES;
-        Address tileAddress = tileSetLocation + tileOffset;
+        Address tileAddress = 0;
+        if (LCDControl.checkBit(4)) {
+            u8 tilenr = mmu->readByte(tileMapLocation + tileY * 32 + tileX);
+            tileAddress = 0x8000 + tilenr * 16;
+        } else {
+            // Signed!
+            s8 tilenr = mmu->readByte(tileMapLocation + tileY * 32 + tileX);
+            tileAddress = 0x9000 + tilenr * 16;
+        }
 
         u8 byte1 = mmu->readByte(tileAddress + ((bgY & 0x07) * 2));
         u8 byte2 = mmu->readByte(tileAddress + ((bgY & 0x07) * 2) + 1);
@@ -167,9 +175,15 @@ void GPU::drawWindow() {
         if (winX < 0) continue;
         tileX = (winX >> 3) & 0x1F;
 
-        u8 tilenr = mmu->readByte(tileMapLocation + (tileY * TILES_PER_LINE) + tileX);
-        u8 tileOffset = tilenr * TILES_BYTES;
-        Address tileAddress = tileSetLocation + tileOffset;
+        Address tileAddress = 0;
+        if (LCDControl.checkBit(4)) {
+            u8 tilenr = mmu->readByte(tileMapLocation + tileY * 32 + tileX);
+            tileAddress = 0x8000 + tilenr * 16;
+        } else {
+            // Signed!
+            s8 tilenr = mmu->readByte(tileMapLocation + tileY * 32 + tileX);
+            tileAddress = 0x9000 + tilenr * 16;
+        }
 
         u8 byte1 = mmu->readByte(tileAddress + ((winY & 0x07) * 2));
         u8 byte2 = mmu->readByte(tileAddress + ((winY & 0x07) * 2) + 1);
@@ -340,3 +354,6 @@ BGPalette GPU::getBGPalette() const {
     return {bgPalette[0], bgPalette[1], bgPalette[2], bgPalette[3]};
 }
 
+void GPU::renderFrame() {
+    screen->draw(buffer, xScroll.getValue(), yScroll.getValue(), getBGPalette());
+}

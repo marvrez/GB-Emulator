@@ -64,7 +64,7 @@ union OAM_Flags {
 
 class GPU  {
 public:
-    GPU(MMU* mmu);
+    GPU(std::shared_ptr<MMU>& mmu, std::shared_ptr<Screen>& screen);
 
     void tick(Cycles cycle);
     bool isUpdated();
@@ -72,8 +72,10 @@ public:
     FrameBuffer* getBuffer();
 
     void setVSyncCallback(void(*Callback)());
+    void renderFrame();
 private:
     std::shared_ptr<MMU> mmu;
+    std::shared_ptr<Screen> screen;
     FrameBuffer buffer;
 
     void(*VSyncCallback)();
