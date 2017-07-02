@@ -11,7 +11,8 @@ GameBoy::GameBoy(std::unique_ptr<Cartridge>& cartridge) :
     cpu(std::make_unique<CPU>(mmu)),
     gpu(std::make_unique<GPU>(mmu, screen)),
     keypad(std::make_shared<Keypad>(mmu)),
-    screen(std::make_shared<Screen>(cartridge->getGametitle()))
+    screen(std::make_shared<Screen>(cartridge->getGametitle())),
+    timer(std::make_unique<Timer>(mmu))
 {
     screen->setKeypad(keypad);
     std::cout << YELLOW << "Gameboy initialized." << RESET << std::endl;
@@ -26,6 +27,7 @@ void GameBoy::run() {
         elapsedCycles += cycles.cycles;
         gpu->tick(cycles);
         keypad->tick();
+        timer->tick(cycles);
 
         /*
         if(gpu->isUpdated()) { //refresh screen
