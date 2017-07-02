@@ -8,6 +8,7 @@ add_sources(
     mbc.cpp
     cartridge.cpp
     gameboy.cpp
+    keypad.cpp
 
     util.h
     cartridge_util.h
