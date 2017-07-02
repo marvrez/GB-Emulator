@@ -3,10 +3,9 @@
 
 #include "boot_roms.h"
 
-MMU::MMU(std::unique_ptr<Cartridge>& c) : cartridge(std::move(c)) {
+MMU::MMU(std::unique_ptr<Cartridge>& c) : cartridge(c.get()) {
     this->reset();
 
-    std::cout << cartridge->getFilename() << "\n";
     std::vector<u8> rom = cartridge->getData();
     switch (cartridge->getType()) {
     case CartridgeType::ROMOnly:
@@ -27,12 +26,15 @@ MMU::MMU(std::unique_ptr<Cartridge>& c) : cartridge(std::move(c)) {
         break;
     }
 
-    std::string saveFilename = cartridge->getFilename() + ".gbsave";
+    this->saveFilename = cartridge->getGametitle() + ".gbsave";
     mbc->load(saveFilename);
 }
 
 MMU::~MMU() {
-    if(mbc.get() != nullptr) mbc->save(cartridge->getFilename());
+    if(mbc.get() != nullptr) {
+        mbc->save(this->saveFilename);
+        std::cout << BOLDMAGENTA << "Current gamestate was succesfully saved to: " << RESET << saveFilename << std::endl;
+    }
 }
 
 void MMU::reset() {

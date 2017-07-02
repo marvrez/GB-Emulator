@@ -9,6 +9,7 @@
 #include <memory>
 #include <string>
 
+
 class MMU {
 public:
     MMU(std::unique_ptr<Cartridge>& c);
@@ -20,7 +21,8 @@ public:
 private:
     std::unique_ptr<MBC> mbc;
     std::vector<u8> wram, vram, voam, zram;
-    std::unique_ptr<Cartridge> cartridge;
+    Cartridge* cartridge;
+    std::string saveFilename;
 };
 
 #endif

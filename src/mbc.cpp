@@ -6,8 +6,7 @@
 #include <string>
 #include <fstream>
 
-MBC0::MBC0(const std::vector<u8>& rom) {
-    this->rom = rom;
+MBC0::MBC0(const std::vector<u8>& rom) : rom(rom) {
     ram.resize(0x2000);
     std::cout << BOLDYELLOW << "MBC0 created" << RESET << std::endl;
 }
@@ -28,14 +27,14 @@ void MBC0::writeRAM(const Address& address, u8 value) {
 
 /********************************/
 
-MBC1::MBC1(const std::vector<u8>& rom) {
-    this->rom = rom;
+MBC1::MBC1(const std::vector<u8>& rom) :
+    rom(rom),
+    rombank(1),
+    rambank(0),
+    extram_on(false),
+    ram_mode(false)
+{
     ram.resize(0x10000);
-    rombank = 1;
-    rambank = 0;
-    extram_on = false;
-    ram_mode = false;
-
     std::cout << BOLDYELLOW << "MBC1 created" << RESET << std::endl;
 }
 
@@ -90,9 +89,13 @@ void MBC1::writeRAM(const Address& address, u8 value) {
 
 /********************************/
 
-MBC3::MBC3(const std::vector<u8>& rom) {
-    this->rom = rom;
-
+MBC3::MBC3(const std::vector<u8>& rom) :
+    rom(rom),
+    rombank(1),
+    rambank(0),
+    extram_on(false),
+    rtc_lock(false)
+{
     int ramsize = 0;
     switch (rom[Header::RAM_SIZE]) {
     case 0x00:
@@ -107,10 +110,6 @@ MBC3::MBC3(const std::vector<u8>& rom) {
 
     ram.resize(ramsize);
     rtc.resize(5);
-    rombank = 1;
-    rambank = 0;
-    extram_on = false;
-    rtc_lock = false;
     std::cout << BOLDYELLOW << "MBC3 created" << RESET << std::endl;
 }
 
@@ -118,7 +117,7 @@ u8 MBC3::readROM(const Address& address) {
     u16 addressVal = address.getValue();
     if (addressVal < 0x4000) return rom[addressVal];
     addressVal &= 0x3FFF;
-    return rom[rombank * 0x4000 + static_cast<s16>(addressVal)];
+    return rom[rombank * 0x4000 + static_cast<s32>(addressVal)];
 }
 
 u8 MBC3::readRAM(const Address& address) {
@@ -126,7 +125,7 @@ u8 MBC3::readRAM(const Address& address) {
     if (!extram_on) return 0;
     if (rambank <= 3) {
         addressVal &= 0x1FFF;
-        return ram[rambank * 0x2000 + static_cast<s16>(addressVal)];
+        return ram[rambank * 0x2000 + static_cast<s32>(addressVal)];
     }
     else return rtc[rambank - 0x08];
 }
@@ -164,7 +163,7 @@ void MBC3::writeRAM(const Address& address, u8 value) {
 
     if (rambank <= 3) {
         addressVal &= 0x1FFF;
-        ram[rambank * 0x2000 + static_cast<s16>(addressVal)] = value;
+        ram[rambank * 0x2000 + static_cast<s32>(addressVal)] = value;
     }
     else {
         rtc[rambank - 0x8] = value;
@@ -177,15 +176,15 @@ void MBC3::save(std::string filename) {
 
     char head[] = "GB_MBC";
     file.write(head, sizeof head);
-    file.write(reinterpret_cast<char*>(&rom[0x0147]), 1);
+    file.write(reinterpret_cast<char*>(&rom[Header::CARTRIDGE_TYPE]), 1);
 
     for (u8 i = 0; i < 5; ++i)
         file.write(reinterpret_cast<char*>(&rtc[i]), 1);
 
-    long long rtc = rtczero;
+    unsigned long long rtc = rtczero;
     file.write(reinterpret_cast<char*>(&rtc), 8);
 
-    for (u8 i = 0; i < ram.size(); ++i)
+    for (unsigned i = 0; i < ram.size(); ++i)
         file.write(reinterpret_cast<char*>(&ram[i]), 1);
     file.close();
 }
@@ -211,7 +210,7 @@ void MBC3::load(std::string filename) {
         rtc.push_back(byte);
     }
 
-    long long rtc;
+    unsigned long long rtc;
     file.read(reinterpret_cast<char*>(&rtc), 8);
     rtczero = rtc;
 
@@ -253,13 +252,13 @@ void MBC3::calc_rtcregs() {
 
 /********************************/
 
-MBC5::MBC5(const std::vector<u8>& rom) {
-    this->rom = rom;
+MBC5::MBC5(const std::vector<u8>& rom) :
+    rom(rom),
+    rombank(1),
+    rambank(0),
+    extram_on(false)
+{
     ram.resize(0x20000);
-    rombank = 1;
-    rambank = 0;
-    extram_on = false;
-
     std::cout << BOLDYELLOW << "MBC5 created" << RESET << std::endl;
 }
 
@@ -311,7 +310,7 @@ void MBC5::writeRAM(const Address& address, u8 value) {
 void MBC5::save(std::string filename) {
     std::ofstream file(filename, std::ios::out | std::ios::binary);
     for (unsigned i = 0; i < ram.size(); ++i)
-        file.write((char*)&ram[i], 1);
+        file.write(reinterpret_cast<char*>(&ram[i]), 1);
     file.close();
 }
 
