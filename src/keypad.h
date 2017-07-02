@@ -24,7 +24,6 @@ public:
     void keyUp(KeypadKey key);
     void keyDown(KeypadKey key);
     void tick();
-    void updateInput();
 private:
     std::shared_ptr<MMU> mmu;
     u8 row0, row1;

@@ -11,7 +11,7 @@
 
 class Screen {
 public:
-    Screen(/*std::shared_ptr<Keypad>& keypad,*/ std::string gametitle, u32 magnification = 5);
+    Screen(std::string gametitle, u32 magnification = 5);
     ~Screen() = default;
 
     void draw(const FrameBuffer& buffer) ;

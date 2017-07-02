@@ -1,7 +1,6 @@
 #include "screen.h"
 
-Screen::Screen(/*std::shared_ptr<Keypad>& keypad,*/ std::string gametitle, u32 magnification) :
-    //keypad(keypad),
+Screen::Screen(std::string gametitle, u32 magnification) :
     magnification(magnification),
     logicalHeight(GAMEBOY_HEIGHT),
     logicalWidth(GAMEBOY_WIDTH),
