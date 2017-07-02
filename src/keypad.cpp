@@ -6,7 +6,6 @@ Keypad::Keypad(std::shared_ptr<MMU> &mmu) :
     mmu(mmu),
     row0(0x0F),
     row1(0x0F),
-    column(0x30),
     interrupt(false)
 {
 }

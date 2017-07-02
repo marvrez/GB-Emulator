@@ -27,7 +27,6 @@ public:
 private:
     std::shared_ptr<MMU> mmu;
     u8 row0, row1;
-    u8 column;
     bool interrupt;
 };
 
