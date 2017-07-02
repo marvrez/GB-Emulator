@@ -54,10 +54,7 @@ void Screen::setKeypad(std::shared_ptr<Keypad> keypad) {
 void Screen::setPixelsOnImage(const FrameBuffer& buffer) {
     for (u32 y = 0; y < logicalHeight; ++y) {
          for (u32 x = 0; x < logicalWidth; ++x) {
-             u32 bufferY = y % FrameBuffer::FRAMEBUFFER_SIZE;
-             u32 bufferX = x % FrameBuffer::FRAMEBUFFER_SIZE;
-
-             Color color = buffer.getPixel(bufferX, bufferY);
+             Color color = buffer.getPixel(x, y);
              this->setLargePixel(x, y, getSFMLColor(color));
          }
      }
