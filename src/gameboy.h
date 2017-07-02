@@ -5,6 +5,7 @@
 #include "mmu.h"
 #include "gpu/gpu.h"
 #include "gpu/screen.h"
+#include "keypad.h"
 
 #include <memory>
 
@@ -20,6 +21,7 @@ private:
     std::shared_ptr<MMU> mmu;
     std::unique_ptr<CPU> cpu;
     std::unique_ptr<GPU> gpu;
+    std::shared_ptr<Keypad> keypad;
     //std::unique_ptr<APU> apu; //TODO..
 };
 

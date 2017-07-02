@@ -7,11 +7,13 @@
 using namespace std::literals;
 
 GameBoy::GameBoy(std::unique_ptr<Cartridge>& cartridge) :
-    screen(std::make_shared<Screen>(cartridge->getGametitle())),
     mmu(std::make_shared<MMU>(cartridge)),
     cpu(std::make_unique<CPU>(mmu)),
-    gpu(std::make_unique<GPU>(mmu, screen))
+    gpu(std::make_unique<GPU>(mmu, screen)),
+    keypad(std::make_shared<Keypad>(mmu)),
+    screen(std::make_shared<Screen>(cartridge->getGametitle()))
 {
+    screen->setKeypad(keypad);
     std::cout << YELLOW << "Gameboy initialized." << RESET << std::endl;
 }
 
@@ -23,6 +25,7 @@ void GameBoy::run() {
         auto cycles = cpu->tick();
         elapsedCycles += cycles.cycles;
         gpu->tick(cycles);
+        keypad->tick();
 
         /*
         if(gpu->isUpdated()) { //refresh screen

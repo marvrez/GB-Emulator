@@ -3,8 +3,13 @@
 #include "opcode_cycles.h"
 #include <cstdio>
 
-CPU::CPU(std::shared_ptr<MMU> mmu) :
-    alu(std::make_unique<ALU>(&A,&F)), mmu(mmu), AF(&A,&F), BC(&B,&C), DE(&D, &E), HL(&H,&L)
+CPU::CPU(std::shared_ptr<MMU>& mmu) :
+    alu(std::make_unique<ALU>(&A,&F)),
+    mmu(mmu),
+    AF(&A,&F),
+    BC(&B,&C),
+    DE(&D, &E),
+    HL(&H,&L)
 {
     InitOPCodeFunctors();
     interruptsEnabled = false;

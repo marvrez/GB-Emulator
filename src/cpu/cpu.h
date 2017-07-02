@@ -18,7 +18,7 @@ enum class Condition {
 
 class CPU {
 public:
-    CPU(std::shared_ptr<MMU> mmu);
+    CPU(std::shared_ptr<MMU>& mmu);
 
     Cycles tick();
 
