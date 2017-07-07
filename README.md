@@ -1,7 +1,7 @@
 # GB-Emulator
 A cross-platform Gameboy Emulator written in C++ using SFML.
 
-##Controls
+## Controls
    
 &nbsp;&nbsp;Z - B Button   
 &nbsp;&nbsp;X - A Button     
