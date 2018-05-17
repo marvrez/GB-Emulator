@@ -1,6 +1,11 @@
 # GB-Emulator
 A cross-platform Gameboy Emulator written in modern C++.
 
+<p float="left">
+<img src="images/tetris.png" width="400">
+<img src="images/pokemon.png" width="400">
+</p>
+
 ## Dependencies
 Make sure you have a C++14 compiler ready and [SFML](https://www.sfml-dev.org/) installed, and you are set to go.
 
