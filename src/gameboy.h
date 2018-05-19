@@ -3,6 +3,7 @@
 
 #include "cpu/cpu.h"
 #include "mmu.h"
+#include "apu.h"
 #include "timer.h"
 #include "gpu/gpu.h"
 #include "gpu/screen.h"
@@ -24,7 +25,7 @@ private:
     std::unique_ptr<GPU> gpu;
     std::shared_ptr<Keypad> keypad;
     std::unique_ptr<Timer> timer;
-    //std::unique_ptr<APU> apu; //TODO..
+    std::unique_ptr<APU> apu;
 };
 
 #endif

@@ -10,6 +10,7 @@ add_sources(
     gameboy.cpp
     keypad.cpp
     timer.cpp
+    apu.cpp
 
     util.h
     cartridge_util.h

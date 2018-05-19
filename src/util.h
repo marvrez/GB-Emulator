@@ -13,11 +13,28 @@ using s16 =  int16_t;
 using s32 =  int32_t;
 using s64 =  int64_t;
 
-static const int GAMEBOY_WIDTH = 160;
+static const int GAMEBOY_WIDTH  = 160;
 static const int GAMEBOY_HEIGHT = 144;
 
 static const int CLOCK_RATE = 4194304;
 
+//audio statics
+static const u32 SAMPLES = 456*1.5;
+static const u32 SAMPLE_RATE = 44100;
+static const u32 FRAME_LENGTH = 70224;
+static const u32 AMPLITUDE = 250;
+static const s32 FramesyncPeriodCount = (CLOCK_RATE/512);
+static const u8 Duty[4][8] = {
+    0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,1,
+    1,0,0,0,1,1,1,1,
+    0,1,1,1,1,1,1,0
+};
+
+static const u8 Ch4Div[8] = {
+     8, 16, 32, 48,
+    64, 80, 96, 112
+};
 enum class Color { //real colors
     White,
     LightGray,
