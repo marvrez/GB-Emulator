@@ -84,6 +84,7 @@ inline std::string describeCartridge(CartridgeType type) {
          case CartridgeType::Unknown:
              return "Unknown";
      }
+    return "Unsupported cartridge type was specified";
 }
 
 enum class ROMSize {
@@ -155,6 +156,7 @@ inline std::string describeROMSize(ROMSize size) {
         case ROMSize::MB1p5:
             return "1.5MB (96 banks)";
     }
+    return "Unsupported ROM size was specified";
 }
 
 enum class RAMSize {
@@ -201,6 +203,7 @@ inline std::string describeRamSize(RAMSize size) {
         case RAMSize::KB64:
             return "64KB";
     }
+    return "Unsupported RAM Size specified";
 }
 
 #endif

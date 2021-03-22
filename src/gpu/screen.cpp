@@ -97,4 +97,5 @@ sf::Color Screen::getSFMLColor(Color color) {
         case Color::DarkGray: 	return sf::Color(85, 85, 85);
         case Color::Black: 		return sf::Color::Black;
     }
+    return sf::Color::Black;
 }
