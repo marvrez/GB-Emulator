@@ -3,6 +3,7 @@
 #include "cartridge_util.h"
 #include "incl/color_utils.h"
 
+#include <cstring>
 #include <string>
 #include <fstream>
 

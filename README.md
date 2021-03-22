@@ -22,7 +22,7 @@ make
 You can run the emulator as follows, assuming you are still in the newly created `build`-folder.
 
 ```sh
-./myproject <RELATIVE_PATH_TO_ROM>
+./gameboy <RELATIVE_PATH_TO_ROM>
 ```
 Where the path is relative to where the executable is placed.
 
